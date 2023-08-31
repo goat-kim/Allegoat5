@@ -1,0 +1,41 @@
+Tilemap.cpp: In member function ‘bool TilemapLayer::load(const char*)’:
+Tilemap.cpp:190:25: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 2 has type ‘std::vector<Tile>::size_type’ {aka ‘long unsigned int’} [-Wformat=]
+  190 |  printf("map.size(): %llu\n", map.size());
+      |                      ~~~^     ~~~~~~~~~~
+      |                         |             |
+      |                         |             std::vector<Tile>::size_type {aka long unsigned int}
+      |                         long long unsigned int
+      |                      %lu
+
+
+euntae471@EUNTAE-X1:~/project/AllegroEx1/AllegroEx1$ ldd `which ./allegoat`
+        linux-vdso.so.1 (0x00007fff66b9d000)
+        liballegro_acodec.so.5.2 => not found
+        liballegro_audio.so.5.2 => not found
+        liballegro_image.so.5.2 => not found
+        liballegro_primitives.so.5.2 => not found
+        liballegro_ttf.so.5.2 => not found
+        liballegro_font.so.5.2 => not found
+        liballegro.so.5.2 => not found
+        libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f26c74b6000)
+        libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f26c749b000)
+        libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f26c72a9000)
+        libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f26c715a000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007f26c76c6000)
+
+euntae471@EUNTAE-X1:~/project/AllegroEx1/AllegroEx1$ pkg-config --libs allegro_acodec-5
+-L/usr/local/lib -lallegro_acodec -lallegro_audio -lallegro
+euntae471@EUNTAE-X1:~/project/AllegroEx1/AllegroEx1$ ls /usr/local/lib
+liballegro.so               liballegro_color.so        liballegro_main.so           liballegro_primitives.so
+liballegro.so.5.2           liballegro_color.so.5.2    liballegro_main.so.5.2       liballegro_primitives.so.5.2
+liballegro.so.5.2.9         liballegro_color.so.5.2.9  liballegro_main.so.5.2.9     liballegro_primitives.so.5.2.9
+liballegro_acodec.so        liballegro_font.so         liballegro_memfile.so        liballegro_ttf.so
+liballegro_acodec.so.5.2    liballegro_font.so.5.2     liballegro_memfile.so.5.2    liballegro_ttf.so.5.2
+liballegro_acodec.so.5.2.9  liballegro_font.so.5.2.9   liballegro_memfile.so.5.2.9  liballegro_ttf.so.5.2.9
+liballegro_audio.so         liballegro_image.so        liballegro_physfs.so         pkgconfig
+liballegro_audio.so.5.2     liballegro_image.so.5.2    liballegro_physfs.so.5.2     python3.8
+liballegro_audio.so.5.2.9   liballegro_image.so.5.2.9  liballegro_physfs.so.5.2.9
+
+ldd, ldconfig
+
+

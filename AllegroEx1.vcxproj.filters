@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일\img">
+      <UniqueIdentifier>{30f02194-2c6f-411e-bdca-58099987169a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일\font">
+      <UniqueIdentifier>{46d93691-16e3-45b8-b688-a6c7ff236abf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일\se">
+      <UniqueIdentifier>{302ce233-3f03-47f9-a24c-f9195ca74fa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일\bgm">
+      <UniqueIdentifier>{81959f3e-e179-4ad6-9ec5-5c26f0b3ee1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일\map">
+      <UniqueIdentifier>{610eef57-03ef-4145-94e3-8eb806b3449d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일\text">
+      <UniqueIdentifier>{e899afcd-be62-4a26-9941-39cfc3171bb9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteAnimation.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Scroller.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Npc1.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BitmapEffect.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Tilemap.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Util.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="bgm\Town1.mid">
+      <Filter>리소스 파일\bgm</Filter>
+    </None>
+    <None Include="bgm\Town2.mid">
+      <Filter>리소스 파일\bgm</Filter>
+    </None>
+    <None Include="bgm\Town2.ogg">
+      <Filter>리소스 파일\bgm</Filter>
+    </None>
+    <None Include="bgm\Town3.mid">
+      <Filter>리소스 파일\bgm</Filter>
+    </None>
+    <None Include="font\gulim.ttc">
+      <Filter>리소스 파일\font</Filter>
+    </None>
+    <None Include="img\shutterstock-1114332359-goat-farming-3-829oe.webp">
+      <Filter>리소스 파일\img</Filter>
+    </None>
+    <None Include="map\map1.csv">
+      <Filter>리소스 파일\map</Filter>
+    </None>
+    <None Include="map\map2.csv">
+      <Filter>리소스 파일\map</Filter>
+    </None>
+    <None Include="map\yamso.csv">
+      <Filter>리소스 파일\map</Filter>
+    </None>
+    <None Include="map\kemo.csv">
+      <Filter>리소스 파일\map</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="img\bg1.png">
+      <Filter>리소스 파일\img</Filter>
+    </Image>
+    <Image Include="img\chr1.png">
+      <Filter>리소스 파일\img</Filter>
+    </Image>
+    <Image Include="img\Actor1.png">
+      <Filter>리소스 파일\img</Filter>
+    </Image>
+    <Image Include="img\Actor2.png">
+      <Filter>리소스 파일\img</Filter>
+    </Image>
+    <Image Include="img\Dungeon.png">
+      <Filter>리소스 파일\img</Filter>
+    </Image>
+    <Image Include="img\Exterior.png">
+      <Filter>리소스 파일\img</Filter>
+    </Image>
+    <Image Include="img\feeding-time-around-evening.jpg">
+      <Filter>리소스 파일\img</Filter>
+    </Image>
+    <Image Include="img\goat-farm.png">
+      <Filter>리소스 파일\img</Filter>
+    </Image>
+    <Image Include="img\Interior.png">
+      <Filter>리소스 파일\img</Filter>
+    </Image>
+    <Image Include="img\Ship.png">
+      <Filter>리소스 파일\img</Filter>
+    </Image>
+    <Image Include="img\World.png">
+      <Filter>리소스 파일\img</Filter>
+    </Image>
+    <Image Include="img\System.png">
+      <Filter>리소스 파일\img</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sprite.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteAnimation.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Scroller.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Npc1.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapEffect.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Tilemap.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="font\consola.ttf">
+      <Filter>리소스 파일\font</Filter>
+    </Font>
+    <Font Include="font\Dotum-03.ttf">
+      <Filter>리소스 파일\font</Filter>
+    </Font>
+    <Font Include="font\DotumChe-04.ttf">
+      <Filter>리소스 파일\font</Filter>
+    </Font>
+    <Font Include="font\Gulim-01.ttf">
+      <Filter>리소스 파일\font</Filter>
+    </Font>
+    <Font Include="font\GulimChe-02.ttf">
+      <Filter>리소스 파일\font</Filter>
+    </Font>
+    <Font Include="font\Batang-01.ttf">
+      <Filter>리소스 파일\font</Filter>
+    </Font>
+    <Font Include="font\BatangChe-02.ttf">
+      <Filter>리소스 파일\font</Filter>
+    </Font>
+    <Font Include="font\consolab.ttf">
+      <Filter>리소스 파일\font</Filter>
+    </Font>
+    <Font Include="font\consolai.ttf">
+      <Filter>리소스 파일\font</Filter>
+    </Font>
+    <Font Include="font\consolaz.ttf">
+      <Filter>리소스 파일\font</Filter>
+    </Font>
+    <Font Include="font\Gungsuh-03.ttf">
+      <Filter>리소스 파일\font</Filter>
+    </Font>
+    <Font Include="font\GungsuhChe-04.ttf">
+      <Filter>리소스 파일\font</Filter>
+    </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="todo.txt">
+      <Filter>리소스 파일</Filter>
+    </Text>
+    <Text Include="text\text1.txt">
+      <Filter>리소스 파일\text</Filter>
+    </Text>
+    <Text Include="text\text2.txt">
+      <Filter>리소스 파일\text</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

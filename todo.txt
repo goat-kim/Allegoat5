@@ -1,0 +1,277 @@
+- 화면 전환 클래스
+ - 전환하고자 하는 맵이나 스테이지를 지정할 수 있음 (전환하면서 불러오기)
+- 스크롤러
+- Player class: 충돌 처리 -> 충돌 처리 클래스를 따로 만들어야 하나? 아님 전역 함수로?
+- 일단 상자 간 충돌 처리 여부를 알려주는 함수는 만들 것
+- 경계 상자 드로잉
+- 타일맵으로 배경화면을 만든다면?
+ -> 비트맵 위에 타일들을 전부 뿌린 다음에 단일 비트맵으로 관리 (관리와 성능상 이점)
+
+** (중요) 스크롤링을 지원하면 화면상에 출력되는 좌표와 실제 좌표를 구분해야 한다.
+-> 이 문제를 해결하지 않으면 충돌(collision) 처리가 제대로 되지 않는다.
+-> Player 클래스 update 루틴에서 화면상에 출력할 좌표인 scrX, scrY를 분리하여 구현 완료
+
+
+- 스테이지 클래스 또는 맵 클래스 만들기
+ - 맵의 충돌 정보나 맵 위에 있는 게임 오브젝트들은 플레이어의 이동에 따라 같이 움직여야 함
+ - 상속해서 쓸 수 있도록 하자. 새로운 맵(또는 스테이지)를 만들 때마다 새 자식 클래스를 만드는 방식
+
+- 구조 변경: 이동과 애니메이션이 존재하는 게임 오브젝트 (또는 엔티티) 클래스 제작
+ -> 플레이어 클래스는 이 게임 오브젝트를 포함하거나 상속
+
+- GameState
+ - ptCurPlayer 멤버변수 추가 (현재 플레이어가 컨트롤하는 플레이어 객체를 가리키는 포인터)
+ - pause 기능: 플레이어와 게임 오브젝트
+ - save, load 기능
+ - 멤버: mapWidth, mapHeight 추가 (현재 맵의 크기)
+
+- UI 클래스
+ - UI가 focused된 상태에는 사용자 입력이 UI에 적용되도록 해야 함
+
+
+ - 맵 경계 부근에서 충돌처리
+
+ 타일맵:
+ - 맵 정보를 관리하는 클래스를 정의하거나 GameState에 저장
+ - 또는 GameState에 Map 클래스를 포함
+ - 타일 단위 크기
+ - GameObject: 타일 단위로 이동하는, 그리고 지정한 좌표 크기만큼 이동하는 move 메서드
+ - move 메서드: Direction으로 지정? -> 어떤 값을 업데이트 해야 할지, update 루틴에는 어떤 영향을 미칠지?
+
+
+ Player와 GameObject
+ [완료] - 계층적 구성
+ [완료] - GameObject 클래스를 상속하는 Player 클래스
+ - 스프라이트 애니메이션, 방향, 충돌처리 등의 기능을 포함하고 있는 GameObject 클래스
+ - GameObject와 Player의 공통점과 차이점 - Player는 사용자 입출력도 처리해야 하므로 등등..
+ - NPC, 각종 게임 오브젝트와 Player의 스크롤, 화면 출력 처리는 어떤 부분에서 같고 어떤 부분에서 다른지?
+ - 플레이어는 각 방향에 대한 인덱스 번호를 멤버로 갖고 있음
+ -> Player.cpp: stopIdx 할당문 부분 참조 (ln77-90)
+
+ # 게임 오브젝트, NPC, 플레이어
+ 게임 오브젝트(와 플레이어 객체)를 식별할 수 있는 tag나 id(또는 index)의 도입
+ - 이 정보를 도입하는 가장 핵심 이유는 
+ - 게임 오브젝트들을 각자 분리된 변수가 아니라 vector나 각종 리스트 자료구조에 생성하면 이를 관리하기도 쉽고 일괄처리하기도 용이할 것
+  - 예를 들어 플레이어가 이동하여 스크롤링할 때 주변 사물들의 위치를 같이 시프트 해줘야 한다거나 등등
+  - 게임 오브젝트들을 일괄로 삭제한다거나 등등
+ - 이 리스트 안에서 게임 오브젝트를 식별할 수 있는 고유 번호나 태그를 둔다면 객체의 포인터를 이 고유값을 통해 탐색해서 가져올 수 있음
+ - tag는 문자열 데이터로, 고유하게 할지, 중복될 수도 있게 할지는 고민 중
+  - 중복이 된다면 카테고리처럼 다룰 수 있을 듯
+ - 물론 이 기능을 도입하면 탐색 시간을 어느정도 발생할 것 (특히 엔트리가 많을수록)
+ - 화면상 y좌표에 따라 렌더링 순서를 정렬할 것
+ 
+# 스프라이트 애니메이션 정보 파싱 기능
+# 세이브/로드 기능 -> 게임 데이터를 바이너리 형식 파일로 저장하고 다시 불러오는 기능
+
+# UI, 시스템 서비스 등등
+
+# 스크롤러
+- Scroller 클래스 인스턴스는 GameState에 멤버로 있다.
+- 
+
+
+# Map
+- Current Map에 대한 클래스
+ - 맵 경계상자 등 포함
+
+
+- GameObject: 업데이트 루틴 -> 배경? 또는 플레이어의 이동 정도(deltaX, deltaY)를 받아서 이 값에 따라 이동
+-> 이 부분이 까다로운 이유: 화면상의 좌표(논리적 좌표), 실제 맵상의 좌표(물리적 좌표)가 달라서 이를 구분하여 렌더링 해야 함
+
+
+- 화면 효과: class BitmapEffect
+ - 행 단위로 물결 효과: class RowWave: public BitmapEffect
+ - void al_set_target_bitmap(bitmap)
+ - ALLEGRO_BITMAP* al_get_target_bitmap()
+ - al_set_target_backbuffer
+ - ALLGEGRO_BITMAP* al_get_backbuffer(display)
+
+ - 상태(state)를 나타내는 변수: busy, 등등..
+  -> bool busy;
+  -> 상태 비트를 이용하여 이벤트 대기 기능 구현
+
+ 1. 대상 비트맵 지정, 참고로 원래 backbuffer는 GameState의 displayBackbuffer에 유지되어 있음
+
+ ** backbuffer와 target의 차이점을 확인하기 위해 별도의 예제를 제작하여 실험해볼 것
+
+
+# 행렬 변환 기능
+- ALLEGRO_TRANSFORM?
+
+# Target Bitmap vs. Backbuffer
+- Draw on bitmap (not display)
+- al_set_target_backbuffer 함수는 ALLEGRO_DISPLAY를 인자로 받음에 주의할 것.
+
+# 화면 전환(Transition)
+- 다른 맵, 다른 장면 등으로 전환하는 기능
+- 전환 애니메이션 지정 기능
+ -> BitmapEffect 클래스 객체로 지정 가능? (예: 매개변수를 현재 화면(비트맵)과 다음 맵의 화면(다음 맵에 그려질 화면)으로 지정)
+ 0. 현재 화면(비트맵)을 따로 저장: 현재 화면의 데이터를 저장하는 방법 문서화해둘 것
+ 1. display 크기의 비트맵 생성 -> 해당 비트맵을 target으로 지정
+ 2. 다음 맵에 그려질 화면을 draw -> target bitmap에 그려짐
+ 3. 화면 전환 효과 시작: 게임 동작(로직) update 일시 중지 -> 전환 효과가 완료될 때까지 정지시킴 (그래서 완료 여부를 나타낼 busy 등의 내부 변수가 필요하다.)
+ 4. 전환 효과 완료: 임시로 생성된 비트맵의 할당 해제, 게임 update 재개 -> 화면 전환용 비트맵의 할당/해제 정책은 구현에 따라 다름.
+ - 맵을 전환할 때마다 비트맵을 할당/해제할 경우 성능이 떨어지는 문제가 있음. 따라서, 프로그램 시작 시 미리 생성된 버퍼를 사용하자.
+ - 전환 효과마다 각각의 클래스로 정의할 경우: 각 클래스 객체마다 버퍼를 가지면 메모리가 낭비될 수 있음.
+   따라서, 화면 전환에 사용되는 버퍼용 비트맵은 하나만 생성할 것.
+
+
+# 화면 배율과 전체화면에 대하여
+- 가능한 캐릭터 스프라이트는 스케일링(확대/축소) 하지 않을 것
+- 캐릭터 스프라이트 크기를 기준으로 나머지 이미지를 스케일링할 것
+- 캐릭터 스프라이트가 작을 경우에는 기준 사이즈에 맞게 게임 화면 전체를 확대할 것
+-> 화면 렌더링(드로잉) 후 화면 전체를 확대해서 출력하는 방법은?
+- 중요: 게임 로직이 화면 크기에 종속되지 않을 것.
+
+# 스크롤러
+- 지정된 맵 크기에 따라 플레이어의 현재 위치 기반으로 뷰포트를 업데이트 해주는 모듈
+- 스크롤러는 뷰포트(RECT)를 반환하며, 배경 그래픽은 이 뷰포트에 해당하는 영역을 화면에 출력
+
+
+# 타일맵
+- 렌더링 우선순위에 대해 고려할 것
+- 해당 메타 데이터는 어디 저장?
+
+# 용어 정리
+- 맵칩(이미지 파일)을 기반으로 -> Tileset
+- 
+
+# 비트맵 효과
+- 물결 효과: 사인 함수 값만큼 비트를 시프트한다. 
+
+# 맵
+- 배경음악
+ - 반복 여부
+- 밝기
+- 기타 효과: 색반전, 감산, 가산 등등..
+
+# 유니코드 및 대사 처리 시스템 구현
+- ALLEGRO_USTR 사용
+- 대사의 파일 입출력 시스템 (로드 및 출력)
+- UI와의 통합
+
+# UI: General UI
+- Label
+ - 폰트
+ - 크기
+ - 색상
+ - 정렬 효과 (왼쪽, 가운데, 오른쪽)
+
+# UI: 메시지 박스 (대사창)
+- 문자 출력 속도
+- 문자 출력 효과음
+- 문자열 정렬 효과 (왼쪽, 가운데, 오른쪽)
+- 위치 (위, 아래, 특정 캐릭터 위에 작게)
+
+# USTR
+- al_get_font_line_height
+- al_get_{text|ustr}_width, al_get_ustr_width
+- al_draw_justified_ustr
+- al_ustr_new_from_buffer(const char *s, size_t size);
+- al_ustr_new()
+- al_ustr_free
+- int32_t al_ustr_get(const ALLEGRO_USTR *ub, int pos)
+- al_ustr_newf("%s", name1); // formatted string
+
+- al_get_ustr_width;
+int al_get_ustr_width(const ALLEGRO_FONT *f, ALLEGRO_USTR const *ustr)
+
+# 폰트 관리도 체계화할 것 (완료)
+- serif: 바탕
+- sans serif: 돋움
+- 사이즈 별 생성
+-> GameState에 System Font를 미리 할당하는 방식으로 구현
+
+# 문자열 관리 시스템
+- 파일로부터 UTF-8 문자열을 읽어서 행 단위로 ALLEGRO_USTR에 load하는 모듈 구현 -> Util.h에?
+
+
+# 걷기 애니메이션 속도 약간 낮출 것
+# 화면 전환 효과 및 암전 효과
+# 맵 단위로 배경음악 데이터 저장할 것. (음악, 반복 여부, 속도)
+
+# Event Command System
+
+# 자막(?) 기능
+- 지정한 시간 동안 특정 지점에 문장을 출력
+- 텍스트 표시 효과도 가능하면 넣기 (밝기변화 등)
+
+
+# DialogBox 업데이트
+- SystemUI 스킨 적용
+- 대사 출력 후 STATE_IDLE일 때 커서 깜빡임 효과 및 사용자 입력 처리 기능 구현
+- 기본 너비는 DEFAULT_DISPLAY_WIDTH, 높이는 DEFAULT_DISPLAY_HEIGHT의 1/3
+- Frame의 유무 선택 가능 (없을 시 화면에 글자만 출력)
+- 문자 출력 시 margin, padding 모두 고려할 것 (개행)
+
+# 키보드 입력 처리 수정 필요 (완료)
+- 키보드 trigger 처리 구현
+ -> 이벤트 발생 시 통보하는 방법은?
+ -> 이벤트 발생 시 GameState에 현재 발생한 이벤트 넣기
+ -> update 루틴에서 GameState에 들어온 이벤트를 확인해서 처리
+
+Key Count를 도입하는 건 어떨까?
+- 키가 눌렸음이 확인되면 해당 키에 대한 keyCount라는 카운터 값을 지정한만큼으로 설정
+- 키가 눌린 상태로 유지되면 매 프레임마다 1씩 감소
+- 계속 감소하다가 0에 도달하면 해당 키는 눌린 상태가 유지되어도 입력 처리를 멈춤 (이 키는 다시 눌릴 때 initial key count 값으로 초기화되어 다시 카운트다운)
+- key trigger의 구현: keyCount를 1로 주면 한 프레임만 입력을 처리할 수 있도록 한다.
+
+- keyCount의 상태:
+ -1: 해당 키는 눌리지 않았음 (key up)
+  0: 해당 키는 계속 눌려있으나 keyCount가 소진되어 더이상 입력이 처리되지 않음
+
+- 해당 기능 도입의 장점은 무엇인가?
+ - 입력에 대한 연속적인 처리와 일회적인(key trigger) 처리를 비교적 단순하게 구현할 수 있다.
+ - 그 외에 주어진 시간 동안의 연속적인 처리나 일정 시간 동안 입력이 이뤄져야 처리되는 등의 기능을 구현할 수 있다.
+** 단순하면서도 빠르고 그러면서도 범용성이 있음
+
+// 동작 모드, 즉 keydown과 count 수를 입력으로 주었을 때 어떻게 동작할지 그 시나리오를 나타낸 것
+// -> 사실 이걸 꼭 도입할 필요는 없을 듯 (구현하기 나름이라, 각 모드별로 update() 루틴을 전부 구성해봤자 코드만 길어지는 등 낭비가 발생할 수 있음)
+enum KeyCountMode {
+	KEY_COUNT_DEFAULT = 0,	// 주어진 프레임 수만큼(즉, 카운터가 소진될 때까지의 시간 동안) 입력 처리, 카운터가 0이 되면 계속 누르고 있어도 더이상 처리되지 않음
+	KEY_COUNT_INTERVAL,	// 
+	KEY_COUNT_DEFER
+};
+
+/* Example1:  */
+void MyObject::update() {
+	// private int c_keyCount;
+	// private int c_keyMode;
+	if (ptGameState->isKeyDown(ALLEGRO_KEY_C)) {
+		if (c_keyCount == -1) { // initial state (이전에 키가 안 눌려있었으면 key count는 -1)
+			c_keyCount = 100; // initialize the key counter
+		}
+
+		// key down
+		if (c_keyCount > 0) {
+			// processing(); ... 
+			c_keyCount--;
+		}
+		// c_keyCount가 0이면 처리X
+	}
+	if (ptGameState->isKeyUp(ALLEGRO_KEY_C)) {
+		c_keyCount = -1;
+	}
+}
+
+시스템 키의 종류
+- 액션, 상호작용, 수락, 확인 등(긍정): E, Z, C, SPACE, RETURN 등
+- 취소, 닫기 등(부정): X, ESC 등
+-> 알만툴 키보드 매핑을 참고할 것 (어떤 종류가 있는지)
+- 해당 환경 설정 정보는 GameState 클래스에 유지
+- gameState->get
+
+
+# 게임 이벤트 정의
+- GameObject 클래스 상속
+- 
+
+# 맵 관리
+- GameState에서 currentMap 관리
+- 맵의 메모리 할당과 해제, 맵 데이터 전달 관리
+- 맵 논리 좌표와 실제 좌표의 변환 제공
+
+
+
+References
+- https://github.com/liballeg/allegro_wiki/wiki/Allegro-Vivace
