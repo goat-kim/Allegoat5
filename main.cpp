@@ -91,6 +91,7 @@ int main(int argc, char* argv[])
 
 	const char* chrFilename = "img/chr1.png";
 	const char* bgFilename = "img/bg1.png";
+	const char* splashFilename = "img/splash-white.png";
 	
 	bool mainLoop = true;
 	bool redraw = false;
@@ -105,6 +106,9 @@ int main(int argc, char* argv[])
 	al_reserve_samples(10);
 	//Sound *sound1 = new Sound();
 	//sound1->load("bgm/Town2.ogg");
+
+	Sprite *sprSplashScreen = new Sprite();
+	sprSplashScreen->load(splashFilename);
 
 	Sprite* sprBG1 = new Sprite();
 	float bgScale = 1.0f;
@@ -203,6 +207,13 @@ int main(int argc, char* argv[])
 
 	printf("dbox.width: %d\n", dbox->getWidth());
 
+	// On test ========================================
+	//gameState->setCurrentGameState(GAME_STATE_INIT); // init 시점이나 스플래시 화면에 필요 데이터 메모리에 로드
+	gameState->setCurrentGameState(GAME_STATE_SPLASH); // 스플래시 화면 출력
+	int curGameState = gameState->getCurrentGameState();
+	int splashCnt = 300;
+	// ================================================
+
 	while (mainLoop) {
 		al_wait_for_event(gameState->getEventQueue(), &ev);
 		//al_get_keyboard_state(keyState);
@@ -214,27 +225,37 @@ int main(int argc, char* argv[])
 
 			gameState->update();
 
-			player->update();
-			npc1->update();
-			npc2->update();
-			dbox->update();
+			curGameState = gameState->getCurrentGameState();
+			if (curGameState == GAME_STATE_RUNNING) {
+				player->update();
+				npc1->update();
+				npc2->update();
+				dbox->update();
 
-			if (player->aabbIntersection(npc1->getBoundaryBox())) {
-				npc1->setCollision(true);
-				player->setCollision(true);
+				if (player->aabbIntersection(npc1->getBoundaryBox())) {
+					npc1->setCollision(true);
+					player->setCollision(true);
+				}
+				else {
+					npc1->setCollision(false);
+					player->setCollision(false);
+				}
+
+				vp = ptScroll->getViewPort();
+				sprintf(buf, "position: [%f, %f]", player->getX(), player->getY());
+				sprintf(vpLog, "view port: [%d, %d, %d, %d]", vp->x, vp->y, vp->width, vp->height);
+				sprintf(vxyLog, "velocity: [%f, %f]", player->getVx(), player->getVy());
+				//sprintf(gameState->getScroller()->getScaledViewPort(10.0f));
+				//scroll->update();
+				//printf("vp.diff: [%d, %d]\n", scroll->getDx(), scroll->getDy());
 			}
-			else {
-				npc1->setCollision(false);
-				player->setCollision(false);
+			else if (curGameState == GAME_STATE_SPLASH) {
+				if (splashCnt <= 0)
+					gameState->setCurrentGameState(GAME_STATE_RUNNING);
+				printf("splashCnt: %d\n", splashCnt);
+				splashCnt--;
 			}
 
-			vp = ptScroll->getViewPort();
-			sprintf(buf, "position: [%f, %f]", player->getX(), player->getY());
-			sprintf(vpLog, "view port: [%d, %d, %d, %d]", vp->x, vp->y, vp->width, vp->height);
-			sprintf(vxyLog, "velocity: [%f, %f]", player->getVx(), player->getVy());
-			//sprintf(gameState->getScroller()->getScaledViewPort(10.0f));
-			//scroll->update();
-			//printf("vp.diff: [%d, %d]\n", scroll->getDx(), scroll->getDy());
 			if (gameState->isKeyDown(ALLEGRO_KEY_ESCAPE))
 				mainLoop = false;
 			break;
@@ -334,73 +355,92 @@ int main(int argc, char* argv[])
 			break;
 
 		if (redraw && al_is_event_queue_empty(gameState->getEventQueue())) {
-			/* targetBitmap에 먼저 게임 화면을 draw한다. */
-			gameState->beginSystemTargetBitmapContext();
-			al_clear_to_color(al_map_rgb(0, 0, 255));
+			curGameState = gameState->getCurrentGameState();
 			
-			//sprBG1->draw();
-			//sprBG1->draw(gameState->getScroller()->getScaledViewPort(bgScale));
-			//sprBG1->draw(scroll->getViewPort());
+			if (curGameState == GAME_STATE_RUNNING) {
+				/* targetBitmap에 먼저 게임 화면을 draw한다. */
+				gameState->beginSystemTargetBitmapContext();
+				al_clear_to_color(al_map_rgb(0, 0, 255));
 
-			const Rect* rc = gameState->getScroller()->getScaledViewPort(bgScale);
-			al_draw_bitmap_region(layer1->getLayerBitmap(), rc->x, rc->y, rc->width, rc->height, 0, 0, 0);
-			//al_draw_bitmap(map1Layer1->getLayerBitmap(), 0, 0, 0);
+				//sprBG1->draw();
+				//sprBG1->draw(gameState->getScroller()->getScaledViewPort(bgScale));
+				//sprBG1->draw(scroll->getViewPort());
 
-			player->draw();
-			npc1->draw();
-			npc2->draw();
+				const Rect* rc = gameState->getScroller()->getScaledViewPort(bgScale);
+				al_draw_bitmap_region(layer1->getLayerBitmap(), rc->x, rc->y, rc->width, rc->height, 0, 0, 0);
+				//al_draw_bitmap(map1Layer1->getLayerBitmap(), 0, 0, 0);
 
-			if (boundBoxVisible) {
-				player->drawBoundaryBox();
-				npc1->drawBoundaryBox();
-				npc2->drawBoundaryBox();
+				player->draw();
+				npc1->draw();
+				npc2->draw();
+
+				if (boundBoxVisible) {
+					player->drawBoundaryBox();
+					npc1->drawBoundaryBox();
+					npc2->drawBoundaryBox();
+				}
+				//sprintf(buf, "[%f, %f]", spr1->getX(), spr1->getY());
+				//al_draw_text(gameState->getBuiltinFont(), al_map_rgb(255, 255, 255), 10.0f, 10.0f, ALLEGRO_ALIGN_LEFT, buf);
+
+				dbox->draw();
+
+				if (textAreaVisible) {
+					Rect rcText = dbox->getTextArea();
+					al_draw_rectangle(rcText.x, rcText.y, rcText.x + rcText.width, rcText.y + rcText.height, al_map_rgb(0xff, 0, 0), 1.0f);
+				}
+
+				// Draw in-game text =====================================================================================
+				//al_draw_ustr(gameState->getSystemFont(GAME_STATE_SYSTEM_FONT_SANS, 12), al_map_rgb(255, 255, 0), 10, 40, 0, usMsg2);
+				//al_draw_ustr(gameState->getSystemFont(GAME_STATE_SYSTEM_FONT_SANS, 14), al_map_rgb(255, 255, 0), 10, 60, 0, usMsg2);
+				//al_draw_text(gameState->getBuiltinFont(), al_map_rgb(255, 255, 0), 10, 80, 0, "Builtin Font Test");
+				// =======================================================================================================
+				
+				/* display bitmap에 앞서 렌더링된 게임 화면(targetBitmap)을 크기에 맞게 draw한다. */
+				gameState->beginDisplayBitmapContext();
+				al_clear_to_color(al_map_rgb(0, 0, 0));
+
+				if (onDisplayTest) {
+					al_draw_bitmap(gameState->getSystemTargetBitmap(), 0, 0, 0);
+					al_draw_scaled_bitmap(gameState->getSystemTargetBitmap(), 0, 0,
+						gameState->getTargetBitmapWidth(), gameState->getTargetBitmapHeight(),
+						100, 300, 640, 480, 0);
+					al_draw_scaled_bitmap(gameState->getSystemTargetBitmap(), 0, 0,
+						gameState->getTargetBitmapWidth(), gameState->getTargetBitmapHeight(),
+						800, 200, 200, 700, 0);
+					al_draw_scaled_bitmap(gameState->getSystemTargetBitmap(), 0, 0,
+						gameState->getTargetBitmapWidth(), gameState->getTargetBitmapHeight(),
+						150, 800, 600, 100, 0);
+				}
+				else {
+					al_draw_scaled_bitmap(gameState->getSystemTargetBitmap(),
+						0, 0,
+						gameState->getTargetBitmapWidth(), gameState->getTargetBitmapHeight(),
+						0, 0,
+						displayWidth, displayHeight, 0);
+				}
+
+				/* 화면에 출력되는 로그는 화면 크기와 독립적으로 출력한다. */
+				al_draw_text(font1, al_map_rgb(255, 255, 255), 10, 10, 0, buf);
+				al_draw_text(font1, al_map_rgb(255, 255, 255), 10, 30, 0, vpLog);
+				al_draw_text(font1, al_map_rgb(255, 255, 255), 10, 50, 0, vxyLog);
+				al_flip_display();
 			}
-			//sprintf(buf, "[%f, %f]", spr1->getX(), spr1->getY());
-			//al_draw_text(gameState->getBuiltinFont(), al_map_rgb(255, 255, 255), 10.0f, 10.0f, ALLEGRO_ALIGN_LEFT, buf);
+			else if (curGameState == GAME_STATE_SPLASH) {
+				gameState->beginSystemTargetBitmapContext();
+				al_clear_to_color(al_map_rgb(0, 0, 0));
+				sprSplashScreen->draw();
 
-			dbox->draw();
-
-			if (textAreaVisible) {
-				Rect rcText = dbox->getTextArea();
-				al_draw_rectangle(rcText.x, rcText.y, rcText.x + rcText.width, rcText.y + rcText.height, al_map_rgb(0xff, 0, 0), 1.0f);
-			}
-
-			// Draw in-game text =====================================================================================
-			//al_draw_ustr(gameState->getSystemFont(GAME_STATE_SYSTEM_FONT_SANS, 12), al_map_rgb(255, 255, 0), 10, 40, 0, usMsg2);
-			//al_draw_ustr(gameState->getSystemFont(GAME_STATE_SYSTEM_FONT_SANS, 14), al_map_rgb(255, 255, 0), 10, 60, 0, usMsg2);
-			//al_draw_text(gameState->getBuiltinFont(), al_map_rgb(255, 255, 0), 10, 80, 0, "Builtin Font Test");
-			// =======================================================================================================
-
-			/* display bitmap에 앞서 렌더링된 게임 화면(targetBitmap)을 크기에 맞게 draw한다. */
-			gameState->beginDisplayBitmapContext();
-			al_clear_to_color(al_map_rgb(0, 0, 0));
-
-			if (onDisplayTest) {
-				al_draw_bitmap(gameState->getSystemTargetBitmap(), 0, 0, 0);
-				al_draw_scaled_bitmap(gameState->getSystemTargetBitmap(), 0, 0,
-					gameState->getTargetBitmapWidth(), gameState->getTargetBitmapHeight(),
-					100, 300, 640, 480, 0);
-				al_draw_scaled_bitmap(gameState->getSystemTargetBitmap(), 0, 0,
-					gameState->getTargetBitmapWidth(), gameState->getTargetBitmapHeight(),
-					800, 200, 200, 700, 0);
-				al_draw_scaled_bitmap(gameState->getSystemTargetBitmap(), 0, 0,
-					gameState->getTargetBitmapWidth(), gameState->getTargetBitmapHeight(),
-					150, 800, 600, 100, 0);
-			}
-			else {
+				gameState->beginDisplayBitmapContext();
+				//al_draw_bitmap(gameState->getSystemTargetBitmap(), 0, 0, 0);
 				al_draw_scaled_bitmap(gameState->getSystemTargetBitmap(),
 					0, 0,
 					gameState->getTargetBitmapWidth(), gameState->getTargetBitmapHeight(),
 					0, 0,
 					displayWidth, displayHeight, 0);
+				al_flip_display();
 			}
 
-
-			/* 화면에 출력되는 로그는 화면 크기와 독립적으로 출력한다. */
-			al_draw_text(font1, al_map_rgb(255, 255, 255), 10, 10, 0, buf);
-			al_draw_text(font1, al_map_rgb(255, 255, 255), 10, 30, 0, vpLog);
-			al_draw_text(font1, al_map_rgb(255, 255, 255), 10, 50, 0, vxyLog);
-			al_flip_display();
+			/* End Drawing */
 			redraw = false;
 		}
 	}

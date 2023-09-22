@@ -20,11 +20,19 @@ enum {
 	GAME_STATE_SYSTEM_FONT_SERIF
 };
 
+enum {
+	GAME_STATE_INIT = 0,
+	GAME_STATE_SPLASH,
+	GAME_STATE_RUNNING,
+	GAME_STATE_PAUSE,
+	GAME_STATE_UNKNOWN = -1
+};
+
 class GameState {
 private:
 	ALLEGRO_DISPLAY* display;
 	ALLEGRO_BITMAP* systemTargetBitmap;		// 게임 화면을 렌더링할 버퍼; 게임 화면 렌더링 시 해당 비트맵을 target으로 전환할 것.
-	ALLEGRO_BITMAP* displayBitmap;		// 원래의 target bitmap; display의 backbuffer와 동일하다. 화면상에 보이는 모습을 렌더링한다.
+	ALLEGRO_BITMAP* displayBitmap;			// 원래의 target bitmap; display의 backbuffer와 동일하다. 화면상에 보이는 모습을 렌더링한다.
 	ALLEGRO_EVENT_QUEUE* eventQueue;
 	ALLEGRO_TIMER* timer;
 	ALLEGRO_FONT* builtinFont;
@@ -36,6 +44,8 @@ private:
 	ALLEGRO_FONT* serif14;
 	ALLEGRO_FONT* serif16;
 	ALLEGRO_FONT* serif18;
+
+	int curGameState;
 
 	int bitmapWidth, bitmapHeight;
 	int displayWidth, displayHeight;
@@ -69,6 +79,9 @@ public:
 	void initMap();
 	void initMap(int w, int h);
 	void update();
+
+	int getCurrentGameState() const;
+	void setCurrentGameState(int state);
 
 	ALLEGRO_EVENT_QUEUE* getEventQueue() const;
 	ALLEGRO_FONT* getBuiltinFont() const;

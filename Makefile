@@ -65,6 +65,6 @@ Npc1.o: Npc1.cpp Npc1.h
 
 .PHONY: clean
 clean:
-	rm *.o
-	rm $(TARGET)
+	rm -f *.o
+	rm -f $(TARGET)
 

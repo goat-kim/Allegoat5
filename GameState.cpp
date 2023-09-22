@@ -16,7 +16,8 @@ GameState::GameState()
 	oldDisplayFlags(0), newDisplayFlags(0), fullscreen(false),
 	scroller(nullptr),
 	ptPlayer(nullptr),
-	mapWidth(TARGET_BITMAP_WIDTH), mapHeight(TARGET_BITMAP_HEIGHT)
+	mapWidth(TARGET_BITMAP_WIDTH), mapHeight(TARGET_BITMAP_HEIGHT),
+	curGameState(GAME_STATE_INIT)
 {
 	printf("GameState()\n");
 	memset(gameTitle, 0, sizeof(gameTitle));
@@ -179,6 +180,14 @@ void GameState::update() {
 	// update routine
 	al_get_keyboard_state(&keyState);
 	scroller->update();
+}
+
+int GameState::getCurrentGameState() const {
+	return curGameState;
+}
+
+void GameState::setCurrentGameState(int state) {
+	curGameState = state;
 }
 
 ALLEGRO_EVENT_QUEUE* GameState::getEventQueue() const {
