@@ -1,0 +1,840 @@
+allegroInit()
+GameState()
+GameState::init(640, 480)
+GameState::registerEventSources()
+Sprite::open(): img/splash-white.png
+Sprite::open(): img/bg1.png
+GameObject()
+Player()
+SpriteAnimation()
+Sprite::open(): img/Animal.png
+SpriteAnimation::open(img/Animal.png): 1
+curIdx/idxBound: 0/96
+curIdx/idxBound: 1/96
+curIdx/idxBound: 2/96
+curIdx/idxBound: 3/96
+curIdx/idxBound: 4/96
+curIdx/idxBound: 5/96
+curIdx/idxBound: 6/96
+curIdx/idxBound: 7/96
+curIdx/idxBound: 8/96
+curIdx/idxBound: 9/96
+curIdx/idxBound: 10/96
+curIdx/idxBound: 11/96
+curIdx/idxBound: 12/96
+curIdx/idxBound: 13/96
+curIdx/idxBound: 14/96
+curIdx/idxBound: 15/96
+curIdx/idxBound: 16/96
+curIdx/idxBound: 17/96
+curIdx/idxBound: 18/96
+curIdx/idxBound: 19/96
+curIdx/idxBound: 20/96
+curIdx/idxBound: 21/96
+curIdx/idxBound: 22/96
+curIdx/idxBound: 23/96
+curIdx/idxBound: 24/96
+curIdx/idxBound: 25/96
+curIdx/idxBound: 26/96
+curIdx/idxBound: 27/96
+curIdx/idxBound: 28/96
+curIdx/idxBound: 29/96
+curIdx/idxBound: 30/96
+curIdx/idxBound: 31/96
+curIdx/idxBound: 32/96
+curIdx/idxBound: 33/96
+curIdx/idxBound: 34/96
+curIdx/idxBound: 35/96
+curIdx/idxBound: 36/96
+curIdx/idxBound: 37/96
+curIdx/idxBound: 38/96
+curIdx/idxBound: 39/96
+curIdx/idxBound: 40/96
+curIdx/idxBound: 41/96
+curIdx/idxBound: 42/96
+curIdx/idxBound: 43/96
+curIdx/idxBound: 44/96
+curIdx/idxBound: 45/96
+curIdx/idxBound: 46/96
+curIdx/idxBound: 47/96
+curIdx/idxBound: 48/96
+curIdx/idxBound: 49/96
+curIdx/idxBound: 50/96
+curIdx/idxBound: 51/96
+curIdx/idxBound: 52/96
+curIdx/idxBound: 53/96
+curIdx/idxBound: 54/96
+curIdx/idxBound: 55/96
+curIdx/idxBound: 56/96
+curIdx/idxBound: 57/96
+curIdx/idxBound: 58/96
+curIdx/idxBound: 59/96
+curIdx/idxBound: 60/96
+curIdx/idxBound: 61/96
+curIdx/idxBound: 62/96
+curIdx/idxBound: 63/96
+curIdx/idxBound: 64/96
+curIdx/idxBound: 65/96
+curIdx/idxBound: 66/96
+curIdx/idxBound: 67/96
+curIdx/idxBound: 68/96
+curIdx/idxBound: 69/96
+curIdx/idxBound: 70/96
+curIdx/idxBound: 71/96
+curIdx/idxBound: 72/96
+curIdx/idxBound: 73/96
+curIdx/idxBound: 74/96
+curIdx/idxBound: 75/96
+curIdx/idxBound: 76/96
+curIdx/idxBound: 77/96
+curIdx/idxBound: 78/96
+curIdx/idxBound: 79/96
+curIdx/idxBound: 80/96
+curIdx/idxBound: 81/96
+curIdx/idxBound: 82/96
+curIdx/idxBound: 83/96
+curIdx/idxBound: 84/96
+curIdx/idxBound: 85/96
+curIdx/idxBound: 86/96
+curIdx/idxBound: 87/96
+curIdx/idxBound: 88/96
+curIdx/idxBound: 89/96
+curIdx/idxBound: 90/96
+curIdx/idxBound: 91/96
+curIdx/idxBound: 92/96
+curIdx/idxBound: 93/96
+curIdx/idxBound: 94/96
+curIdx/idxBound: 95/96
+regList[0]: [0, 0, 24, 32]
+regList[1]: [24, 0, 24, 32]
+regList[2]: [48, 0, 24, 32]
+regList[3]: [72, 0, 24, 32]
+regList[4]: [96, 0, 24, 32]
+regList[5]: [120, 0, 24, 32]
+regList[6]: [144, 0, 24, 32]
+regList[7]: [168, 0, 24, 32]
+regList[8]: [192, 0, 24, 32]
+regList[9]: [216, 0, 24, 32]
+regList[10]: [240, 0, 24, 32]
+regList[11]: [264, 0, 24, 32]
+regList[12]: [0, 32, 24, 32]
+regList[13]: [24, 32, 24, 32]
+regList[14]: [48, 32, 24, 32]
+regList[15]: [72, 32, 24, 32]
+regList[16]: [96, 32, 24, 32]
+regList[17]: [120, 32, 24, 32]
+regList[18]: [144, 32, 24, 32]
+regList[19]: [168, 32, 24, 32]
+regList[20]: [192, 32, 24, 32]
+regList[21]: [216, 32, 24, 32]
+regList[22]: [240, 32, 24, 32]
+regList[23]: [264, 32, 24, 32]
+regList[24]: [0, 64, 24, 32]
+regList[25]: [24, 64, 24, 32]
+regList[26]: [48, 64, 24, 32]
+regList[27]: [72, 64, 24, 32]
+regList[28]: [96, 64, 24, 32]
+regList[29]: [120, 64, 24, 32]
+regList[30]: [144, 64, 24, 32]
+regList[31]: [168, 64, 24, 32]
+regList[32]: [192, 64, 24, 32]
+regList[33]: [216, 64, 24, 32]
+regList[34]: [240, 64, 24, 32]
+regList[35]: [264, 64, 24, 32]
+regList[36]: [0, 96, 24, 32]
+regList[37]: [24, 96, 24, 32]
+regList[38]: [48, 96, 24, 32]
+regList[39]: [72, 96, 24, 32]
+regList[40]: [96, 96, 24, 32]
+regList[41]: [120, 96, 24, 32]
+regList[42]: [144, 96, 24, 32]
+regList[43]: [168, 96, 24, 32]
+regList[44]: [192, 96, 24, 32]
+regList[45]: [216, 96, 24, 32]
+regList[46]: [240, 96, 24, 32]
+regList[47]: [264, 96, 24, 32]
+regList[48]: [0, 128, 24, 32]
+regList[49]: [24, 128, 24, 32]
+regList[50]: [48, 128, 24, 32]
+regList[51]: [72, 128, 24, 32]
+regList[52]: [96, 128, 24, 32]
+regList[53]: [120, 128, 24, 32]
+regList[54]: [144, 128, 24, 32]
+regList[55]: [168, 128, 24, 32]
+regList[56]: [192, 128, 24, 32]
+regList[57]: [216, 128, 24, 32]
+regList[58]: [240, 128, 24, 32]
+regList[59]: [264, 128, 24, 32]
+regList[60]: [0, 160, 24, 32]
+regList[61]: [24, 160, 24, 32]
+regList[62]: [48, 160, 24, 32]
+regList[63]: [72, 160, 24, 32]
+regList[64]: [96, 160, 24, 32]
+regList[65]: [120, 160, 24, 32]
+regList[66]: [144, 160, 24, 32]
+regList[67]: [168, 160, 24, 32]
+regList[68]: [192, 160, 24, 32]
+regList[69]: [216, 160, 24, 32]
+regList[70]: [240, 160, 24, 32]
+regList[71]: [264, 160, 24, 32]
+regList[72]: [0, 192, 24, 32]
+regList[73]: [24, 192, 24, 32]
+regList[74]: [48, 192, 24, 32]
+regList[75]: [72, 192, 24, 32]
+regList[76]: [96, 192, 24, 32]
+regList[77]: [120, 192, 24, 32]
+regList[78]: [144, 192, 24, 32]
+regList[79]: [168, 192, 24, 32]
+regList[80]: [192, 192, 24, 32]
+regList[81]: [216, 192, 24, 32]
+regList[82]: [240, 192, 24, 32]
+regList[83]: [264, 192, 24, 32]
+regList[84]: [0, 224, 24, 32]
+regList[85]: [24, 224, 24, 32]
+regList[86]: [48, 224, 24, 32]
+regList[87]: [72, 224, 24, 32]
+regList[88]: [96, 224, 24, 32]
+regList[89]: [120, 224, 24, 32]
+regList[90]: [144, 224, 24, 32]
+regList[91]: [168, 224, 24, 32]
+regList[92]: [192, 224, 24, 32]
+regList[93]: [216, 224, 24, 32]
+regList[94]: [240, 224, 24, 32]
+regList[95]: [264, 224, 24, 32]
+AniListEntry()
+AniListEntry()
+AniListEntry()
+AniListEntry()
+SpriteAnimation::createAutomatedRegionList(): '8 * 12' region list created and '4' aniList entry inserted
+0 1 2 
+12 13 14 
+24 25 26 
+36 37 38 
+GameObject()
+SpriteAnimation()
+Sprite::open(): img/Actor2.png
+SpriteAnimation::open(img/Actor2.png): 1
+curIdx/idxBound: 0/96
+curIdx/idxBound: 1/96
+curIdx/idxBound: 2/96
+curIdx/idxBound: 3/96
+curIdx/idxBound: 4/96
+curIdx/idxBound: 5/96
+curIdx/idxBound: 6/96
+curIdx/idxBound: 7/96
+curIdx/idxBound: 8/96
+curIdx/idxBound: 9/96
+curIdx/idxBound: 10/96
+curIdx/idxBound: 11/96
+curIdx/idxBound: 12/96
+curIdx/idxBound: 13/96
+curIdx/idxBound: 14/96
+curIdx/idxBound: 15/96
+curIdx/idxBound: 16/96
+curIdx/idxBound: 17/96
+curIdx/idxBound: 18/96
+curIdx/idxBound: 19/96
+curIdx/idxBound: 20/96
+curIdx/idxBound: 21/96
+curIdx/idxBound: 22/96
+curIdx/idxBound: 23/96
+curIdx/idxBound: 24/96
+curIdx/idxBound: 25/96
+curIdx/idxBound: 26/96
+curIdx/idxBound: 27/96
+curIdx/idxBound: 28/96
+curIdx/idxBound: 29/96
+curIdx/idxBound: 30/96
+curIdx/idxBound: 31/96
+curIdx/idxBound: 32/96
+curIdx/idxBound: 33/96
+curIdx/idxBound: 34/96
+curIdx/idxBound: 35/96
+curIdx/idxBound: 36/96
+curIdx/idxBound: 37/96
+curIdx/idxBound: 38/96
+curIdx/idxBound: 39/96
+curIdx/idxBound: 40/96
+curIdx/idxBound: 41/96
+curIdx/idxBound: 42/96
+curIdx/idxBound: 43/96
+curIdx/idxBound: 44/96
+curIdx/idxBound: 45/96
+curIdx/idxBound: 46/96
+curIdx/idxBound: 47/96
+curIdx/idxBound: 48/96
+curIdx/idxBound: 49/96
+curIdx/idxBound: 50/96
+curIdx/idxBound: 51/96
+curIdx/idxBound: 52/96
+curIdx/idxBound: 53/96
+curIdx/idxBound: 54/96
+curIdx/idxBound: 55/96
+curIdx/idxBound: 56/96
+curIdx/idxBound: 57/96
+curIdx/idxBound: 58/96
+curIdx/idxBound: 59/96
+curIdx/idxBound: 60/96
+curIdx/idxBound: 61/96
+curIdx/idxBound: 62/96
+curIdx/idxBound: 63/96
+curIdx/idxBound: 64/96
+curIdx/idxBound: 65/96
+curIdx/idxBound: 66/96
+curIdx/idxBound: 67/96
+curIdx/idxBound: 68/96
+curIdx/idxBound: 69/96
+curIdx/idxBound: 70/96
+curIdx/idxBound: 71/96
+curIdx/idxBound: 72/96
+curIdx/idxBound: 73/96
+curIdx/idxBound: 74/96
+curIdx/idxBound: 75/96
+curIdx/idxBound: 76/96
+curIdx/idxBound: 77/96
+curIdx/idxBound: 78/96
+curIdx/idxBound: 79/96
+curIdx/idxBound: 80/96
+curIdx/idxBound: 81/96
+curIdx/idxBound: 82/96
+curIdx/idxBound: 83/96
+curIdx/idxBound: 84/96
+curIdx/idxBound: 85/96
+curIdx/idxBound: 86/96
+curIdx/idxBound: 87/96
+curIdx/idxBound: 88/96
+curIdx/idxBound: 89/96
+curIdx/idxBound: 90/96
+curIdx/idxBound: 91/96
+curIdx/idxBound: 92/96
+curIdx/idxBound: 93/96
+curIdx/idxBound: 94/96
+curIdx/idxBound: 95/96
+regList[0]: [0, 0, 24, 32]
+regList[1]: [24, 0, 24, 32]
+regList[2]: [48, 0, 24, 32]
+regList[3]: [72, 0, 24, 32]
+regList[4]: [96, 0, 24, 32]
+regList[5]: [120, 0, 24, 32]
+regList[6]: [144, 0, 24, 32]
+regList[7]: [168, 0, 24, 32]
+regList[8]: [192, 0, 24, 32]
+regList[9]: [216, 0, 24, 32]
+regList[10]: [240, 0, 24, 32]
+regList[11]: [264, 0, 24, 32]
+regList[12]: [0, 32, 24, 32]
+regList[13]: [24, 32, 24, 32]
+regList[14]: [48, 32, 24, 32]
+regList[15]: [72, 32, 24, 32]
+regList[16]: [96, 32, 24, 32]
+regList[17]: [120, 32, 24, 32]
+regList[18]: [144, 32, 24, 32]
+regList[19]: [168, 32, 24, 32]
+regList[20]: [192, 32, 24, 32]
+regList[21]: [216, 32, 24, 32]
+regList[22]: [240, 32, 24, 32]
+regList[23]: [264, 32, 24, 32]
+regList[24]: [0, 64, 24, 32]
+regList[25]: [24, 64, 24, 32]
+regList[26]: [48, 64, 24, 32]
+regList[27]: [72, 64, 24, 32]
+regList[28]: [96, 64, 24, 32]
+regList[29]: [120, 64, 24, 32]
+regList[30]: [144, 64, 24, 32]
+regList[31]: [168, 64, 24, 32]
+regList[32]: [192, 64, 24, 32]
+regList[33]: [216, 64, 24, 32]
+regList[34]: [240, 64, 24, 32]
+regList[35]: [264, 64, 24, 32]
+regList[36]: [0, 96, 24, 32]
+regList[37]: [24, 96, 24, 32]
+regList[38]: [48, 96, 24, 32]
+regList[39]: [72, 96, 24, 32]
+regList[40]: [96, 96, 24, 32]
+regList[41]: [120, 96, 24, 32]
+regList[42]: [144, 96, 24, 32]
+regList[43]: [168, 96, 24, 32]
+regList[44]: [192, 96, 24, 32]
+regList[45]: [216, 96, 24, 32]
+regList[46]: [240, 96, 24, 32]
+regList[47]: [264, 96, 24, 32]
+regList[48]: [0, 128, 24, 32]
+regList[49]: [24, 128, 24, 32]
+regList[50]: [48, 128, 24, 32]
+regList[51]: [72, 128, 24, 32]
+regList[52]: [96, 128, 24, 32]
+regList[53]: [120, 128, 24, 32]
+regList[54]: [144, 128, 24, 32]
+regList[55]: [168, 128, 24, 32]
+regList[56]: [192, 128, 24, 32]
+regList[57]: [216, 128, 24, 32]
+regList[58]: [240, 128, 24, 32]
+regList[59]: [264, 128, 24, 32]
+regList[60]: [0, 160, 24, 32]
+regList[61]: [24, 160, 24, 32]
+regList[62]: [48, 160, 24, 32]
+regList[63]: [72, 160, 24, 32]
+regList[64]: [96, 160, 24, 32]
+regList[65]: [120, 160, 24, 32]
+regList[66]: [144, 160, 24, 32]
+regList[67]: [168, 160, 24, 32]
+regList[68]: [192, 160, 24, 32]
+regList[69]: [216, 160, 24, 32]
+regList[70]: [240, 160, 24, 32]
+regList[71]: [264, 160, 24, 32]
+regList[72]: [0, 192, 24, 32]
+regList[73]: [24, 192, 24, 32]
+regList[74]: [48, 192, 24, 32]
+regList[75]: [72, 192, 24, 32]
+regList[76]: [96, 192, 24, 32]
+regList[77]: [120, 192, 24, 32]
+regList[78]: [144, 192, 24, 32]
+regList[79]: [168, 192, 24, 32]
+regList[80]: [192, 192, 24, 32]
+regList[81]: [216, 192, 24, 32]
+regList[82]: [240, 192, 24, 32]
+regList[83]: [264, 192, 24, 32]
+regList[84]: [0, 224, 24, 32]
+regList[85]: [24, 224, 24, 32]
+regList[86]: [48, 224, 24, 32]
+regList[87]: [72, 224, 24, 32]
+regList[88]: [96, 224, 24, 32]
+regList[89]: [120, 224, 24, 32]
+regList[90]: [144, 224, 24, 32]
+regList[91]: [168, 224, 24, 32]
+regList[92]: [192, 224, 24, 32]
+regList[93]: [216, 224, 24, 32]
+regList[94]: [240, 224, 24, 32]
+regList[95]: [264, 224, 24, 32]
+AniListEntry()
+AniListEntry()
+AniListEntry()
+AniListEntry()
+SpriteAnimation::createAutomatedRegionList(): '8 * 12' region list created and '4' aniList entry inserted
+0 1 2 
+12 13 14 
+24 25 26 
+36 37 38 
+npc1.x=200.000000, npc1.y=200.000000
+GameObject()
+SpriteAnimation()
+Sprite::open(): img/Actor2.png
+SpriteAnimation::open(img/Actor2.png): 1
+curIdx/idxBound: 0/96
+curIdx/idxBound: 1/96
+curIdx/idxBound: 2/96
+curIdx/idxBound: 3/96
+curIdx/idxBound: 4/96
+curIdx/idxBound: 5/96
+curIdx/idxBound: 6/96
+curIdx/idxBound: 7/96
+curIdx/idxBound: 8/96
+curIdx/idxBound: 9/96
+curIdx/idxBound: 10/96
+curIdx/idxBound: 11/96
+curIdx/idxBound: 12/96
+curIdx/idxBound: 13/96
+curIdx/idxBound: 14/96
+curIdx/idxBound: 15/96
+curIdx/idxBound: 16/96
+curIdx/idxBound: 17/96
+curIdx/idxBound: 18/96
+curIdx/idxBound: 19/96
+curIdx/idxBound: 20/96
+curIdx/idxBound: 21/96
+curIdx/idxBound: 22/96
+curIdx/idxBound: 23/96
+curIdx/idxBound: 24/96
+curIdx/idxBound: 25/96
+curIdx/idxBound: 26/96
+curIdx/idxBound: 27/96
+curIdx/idxBound: 28/96
+curIdx/idxBound: 29/96
+curIdx/idxBound: 30/96
+curIdx/idxBound: 31/96
+curIdx/idxBound: 32/96
+curIdx/idxBound: 33/96
+curIdx/idxBound: 34/96
+curIdx/idxBound: 35/96
+curIdx/idxBound: 36/96
+curIdx/idxBound: 37/96
+curIdx/idxBound: 38/96
+curIdx/idxBound: 39/96
+curIdx/idxBound: 40/96
+curIdx/idxBound: 41/96
+curIdx/idxBound: 42/96
+curIdx/idxBound: 43/96
+curIdx/idxBound: 44/96
+curIdx/idxBound: 45/96
+curIdx/idxBound: 46/96
+curIdx/idxBound: 47/96
+curIdx/idxBound: 48/96
+curIdx/idxBound: 49/96
+curIdx/idxBound: 50/96
+curIdx/idxBound: 51/96
+curIdx/idxBound: 52/96
+curIdx/idxBound: 53/96
+curIdx/idxBound: 54/96
+curIdx/idxBound: 55/96
+curIdx/idxBound: 56/96
+curIdx/idxBound: 57/96
+curIdx/idxBound: 58/96
+curIdx/idxBound: 59/96
+curIdx/idxBound: 60/96
+curIdx/idxBound: 61/96
+curIdx/idxBound: 62/96
+curIdx/idxBound: 63/96
+curIdx/idxBound: 64/96
+curIdx/idxBound: 65/96
+curIdx/idxBound: 66/96
+curIdx/idxBound: 67/96
+curIdx/idxBound: 68/96
+curIdx/idxBound: 69/96
+curIdx/idxBound: 70/96
+curIdx/idxBound: 71/96
+curIdx/idxBound: 72/96
+curIdx/idxBound: 73/96
+curIdx/idxBound: 74/96
+curIdx/idxBound: 75/96
+curIdx/idxBound: 76/96
+curIdx/idxBound: 77/96
+curIdx/idxBound: 78/96
+curIdx/idxBound: 79/96
+curIdx/idxBound: 80/96
+curIdx/idxBound: 81/96
+curIdx/idxBound: 82/96
+curIdx/idxBound: 83/96
+curIdx/idxBound: 84/96
+curIdx/idxBound: 85/96
+curIdx/idxBound: 86/96
+curIdx/idxBound: 87/96
+curIdx/idxBound: 88/96
+curIdx/idxBound: 89/96
+curIdx/idxBound: 90/96
+curIdx/idxBound: 91/96
+curIdx/idxBound: 92/96
+curIdx/idxBound: 93/96
+curIdx/idxBound: 94/96
+curIdx/idxBound: 95/96
+regList[0]: [0, 0, 24, 32]
+regList[1]: [24, 0, 24, 32]
+regList[2]: [48, 0, 24, 32]
+regList[3]: [72, 0, 24, 32]
+regList[4]: [96, 0, 24, 32]
+regList[5]: [120, 0, 24, 32]
+regList[6]: [144, 0, 24, 32]
+regList[7]: [168, 0, 24, 32]
+regList[8]: [192, 0, 24, 32]
+regList[9]: [216, 0, 24, 32]
+regList[10]: [240, 0, 24, 32]
+regList[11]: [264, 0, 24, 32]
+regList[12]: [0, 32, 24, 32]
+regList[13]: [24, 32, 24, 32]
+regList[14]: [48, 32, 24, 32]
+regList[15]: [72, 32, 24, 32]
+regList[16]: [96, 32, 24, 32]
+regList[17]: [120, 32, 24, 32]
+regList[18]: [144, 32, 24, 32]
+regList[19]: [168, 32, 24, 32]
+regList[20]: [192, 32, 24, 32]
+regList[21]: [216, 32, 24, 32]
+regList[22]: [240, 32, 24, 32]
+regList[23]: [264, 32, 24, 32]
+regList[24]: [0, 64, 24, 32]
+regList[25]: [24, 64, 24, 32]
+regList[26]: [48, 64, 24, 32]
+regList[27]: [72, 64, 24, 32]
+regList[28]: [96, 64, 24, 32]
+regList[29]: [120, 64, 24, 32]
+regList[30]: [144, 64, 24, 32]
+regList[31]: [168, 64, 24, 32]
+regList[32]: [192, 64, 24, 32]
+regList[33]: [216, 64, 24, 32]
+regList[34]: [240, 64, 24, 32]
+regList[35]: [264, 64, 24, 32]
+regList[36]: [0, 96, 24, 32]
+regList[37]: [24, 96, 24, 32]
+regList[38]: [48, 96, 24, 32]
+regList[39]: [72, 96, 24, 32]
+regList[40]: [96, 96, 24, 32]
+regList[41]: [120, 96, 24, 32]
+regList[42]: [144, 96, 24, 32]
+regList[43]: [168, 96, 24, 32]
+regList[44]: [192, 96, 24, 32]
+regList[45]: [216, 96, 24, 32]
+regList[46]: [240, 96, 24, 32]
+regList[47]: [264, 96, 24, 32]
+regList[48]: [0, 128, 24, 32]
+regList[49]: [24, 128, 24, 32]
+regList[50]: [48, 128, 24, 32]
+regList[51]: [72, 128, 24, 32]
+regList[52]: [96, 128, 24, 32]
+regList[53]: [120, 128, 24, 32]
+regList[54]: [144, 128, 24, 32]
+regList[55]: [168, 128, 24, 32]
+regList[56]: [192, 128, 24, 32]
+regList[57]: [216, 128, 24, 32]
+regList[58]: [240, 128, 24, 32]
+regList[59]: [264, 128, 24, 32]
+regList[60]: [0, 160, 24, 32]
+regList[61]: [24, 160, 24, 32]
+regList[62]: [48, 160, 24, 32]
+regList[63]: [72, 160, 24, 32]
+regList[64]: [96, 160, 24, 32]
+regList[65]: [120, 160, 24, 32]
+regList[66]: [144, 160, 24, 32]
+regList[67]: [168, 160, 24, 32]
+regList[68]: [192, 160, 24, 32]
+regList[69]: [216, 160, 24, 32]
+regList[70]: [240, 160, 24, 32]
+regList[71]: [264, 160, 24, 32]
+regList[72]: [0, 192, 24, 32]
+regList[73]: [24, 192, 24, 32]
+regList[74]: [48, 192, 24, 32]
+regList[75]: [72, 192, 24, 32]
+regList[76]: [96, 192, 24, 32]
+regList[77]: [120, 192, 24, 32]
+regList[78]: [144, 192, 24, 32]
+regList[79]: [168, 192, 24, 32]
+regList[80]: [192, 192, 24, 32]
+regList[81]: [216, 192, 24, 32]
+regList[82]: [240, 192, 24, 32]
+regList[83]: [264, 192, 24, 32]
+regList[84]: [0, 224, 24, 32]
+regList[85]: [24, 224, 24, 32]
+regList[86]: [48, 224, 24, 32]
+regList[87]: [72, 224, 24, 32]
+regList[88]: [96, 224, 24, 32]
+regList[89]: [120, 224, 24, 32]
+regList[90]: [144, 224, 24, 32]
+regList[91]: [168, 224, 24, 32]
+regList[92]: [192, 224, 24, 32]
+regList[93]: [216, 224, 24, 32]
+regList[94]: [240, 224, 24, 32]
+regList[95]: [264, 224, 24, 32]
+AniListEntry()
+AniListEntry()
+AniListEntry()
+AniListEntry()
+SpriteAnimation::createAutomatedRegionList(): '8 * 12' region list created and '4' aniList entry inserted
+0 1 2 
+12 13 14 
+24 25 26 
+36 37 38 
+Tileset()
+Sprite::open(): img/Interior.png
+TilemapLayer(Tileset*)
+file name: map/kemo.csv
+buffer size: 56314
+csvbuf[bufSize-1]: 0
+
+total: 15000 tiles
+map width: 100, map height: 150
+csvbuf:	0x5569d62cfb40
+ptr:	0x5569d62dd739
+map.size(): 15000
+map size: [1600, 2400]
+Scroller()
+Scroller::init(const Rect&)=======
+playerXY: [200.000000, 130.000000]
+vp: [40, 10, 320, 240]
+bgBnd: [0, 0, 1600, 2400]
+prevXY: [40.000000, 10.000000]
+==================================
+scroller fixed: 0 0
+UI()
+UstrVector()
+DialogBox()
+strlen: 051, al_ustr_size: 051, al_ustr_length: 021
+strlen: 040, al_ustr_size: 040, al_ustr_length: 016
+strlen: 198, al_ustr_size: 198, al_ustr_length: 066
+strlen: 011, al_ustr_size: 011, al_ustr_length: 011
+strlen: 038, al_ustr_size: 038, al_ustr_length: 038
+strlen: 135, al_ustr_size: 135, al_ustr_length: 081
+strlen: 180, al_ustr_size: 180, al_ustr_length: 060
+strlen: 240, al_ustr_size: 240, al_ustr_length: 080
+strlen: 240, al_ustr_size: 240, al_ustr_length: 080
+dbox.width: 320
+splashCnt: 150
+splashCnt: 149
+splashCnt: 148
+splashCnt: 147
+splashCnt: 146
+splashCnt: 145
+splashCnt: 144
+splashCnt: 143
+splashCnt: 142
+splashCnt: 141
+splashCnt: 140
+splashCnt: 139
+splashCnt: 138
+splashCnt: 137
+splashCnt: 136
+splashCnt: 135
+splashCnt: 134
+splashCnt: 133
+splashCnt: 132
+splashCnt: 131
+splashCnt: 130
+splashCnt: 129
+splashCnt: 128
+splashCnt: 127
+splashCnt: 126
+splashCnt: 125
+splashCnt: 124
+splashCnt: 123
+splashCnt: 122
+splashCnt: 121
+splashCnt: 120
+splashCnt: 119
+splashCnt: 118
+splashCnt: 117
+splashCnt: 116
+splashCnt: 115
+splashCnt: 114
+splashCnt: 113
+splashCnt: 112
+splashCnt: 111
+splashCnt: 110
+splashCnt: 109
+splashCnt: 108
+splashCnt: 107
+splashCnt: 106
+splashCnt: 105
+splashCnt: 104
+splashCnt: 103
+splashCnt: 102
+splashCnt: 101
+splashCnt: 100
+splashCnt: 99
+splashCnt: 98
+splashCnt: 97
+splashCnt: 96
+splashCnt: 95
+splashCnt: 94
+splashCnt: 93
+splashCnt: 92
+splashCnt: 91
+splashCnt: 90
+splashCnt: 89
+splashCnt: 88
+splashCnt: 87
+splashCnt: 86
+splashCnt: 85
+splashCnt: 84
+splashCnt: 83
+splashCnt: 82
+splashCnt: 81
+splashCnt: 80
+splashCnt: 79
+splashCnt: 78
+splashCnt: 77
+splashCnt: 76
+splashCnt: 75
+splashCnt: 74
+splashCnt: 73
+splashCnt: 72
+splashCnt: 71
+splashCnt: 70
+splashCnt: 69
+splashCnt: 68
+splashCnt: 67
+splashCnt: 66
+splashCnt: 65
+splashCnt: 64
+splashCnt: 63
+splashCnt: 62
+splashCnt: 61
+splashCnt: 60
+splashCnt: 59
+splashCnt: 58
+splashCnt: 57
+splashCnt: 56
+splashCnt: 55
+splashCnt: 54
+splashCnt: 53
+splashCnt: 52
+splashCnt: 51
+splashCnt: 50
+splashCnt: 49
+splashCnt: 48
+splashCnt: 47
+splashCnt: 46
+splashCnt: 45
+splashCnt: 44
+splashCnt: 43
+splashCnt: 42
+splashCnt: 41
+splashCnt: 40
+splashCnt: 39
+splashCnt: 38
+splashCnt: 37
+splashCnt: 36
+splashCnt: 35
+splashCnt: 34
+splashCnt: 33
+splashCnt: 32
+splashCnt: 31
+splashCnt: 30
+splashCnt: 29
+splashCnt: 28
+splashCnt: 27
+splashCnt: 26
+splashCnt: 25
+splashCnt: 24
+splashCnt: 23
+splashCnt: 22
+splashCnt: 21
+splashCnt: 20
+splashCnt: 19
+splashCnt: 18
+splashCnt: 17
+splashCnt: 16
+splashCnt: 15
+splashCnt: 14
+splashCnt: 13
+splashCnt: 12
+splashCnt: 11
+splashCnt: 10
+splashCnt: 9
+splashCnt: 8
+splashCnt: 7
+splashCnt: 6
+splashCnt: 5
+splashCnt: 4
+splashCnt: 3
+splashCnt: 2
+splashCnt: 1
+splashCnt: 0
+~DialogBox()
+~UstrVector()
+~UI()
+~GameObject(): img/Actor2.png
+~SpriteAnimation(): img/Actor2.png
+~AniListEntry()
+~AniListEntry()
+~AniListEntry()
+~AniListEntry()
+~Sprite(): img/Actor2.png
+~Npc1()
+~GameObject(): img/Actor2.png
+~SpriteAnimation(): img/Actor2.png
+~AniListEntry()
+~AniListEntry()
+~AniListEntry()
+~AniListEntry()
+~Sprite(): img/Actor2.png
+~Player()
+~GameObject(): img/Animal.png
+~SpriteAnimation(): img/Animal.png
+~AniListEntry()
+~AniListEntry()
+~AniListEntry()
+~AniListEntry()
+~Sprite(): img/Animal.png
+~TilemapLayer()
+~Sprite(): img/Interior.png
+~Tileset()
+~Sprite(): img/bg1.png
+~GameState()
+~Scroller()

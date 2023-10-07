@@ -55,6 +55,7 @@ bool UstrVector::load(const char* pathname) {
 	while (!feof(fp)) {
 		fgets(buf, BUF_SIZE, fp);
 		//fgets(buf, 512, fp);
+		printf("strlen(buf): %ld\n", strlen(buf));
 		char chEnd = buf[strlen(buf) - 1];
 		if (chEnd == '\n') {
 			buf[strlen(buf) - 1] = '\0';

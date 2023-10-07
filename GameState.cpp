@@ -88,6 +88,7 @@ bool GameState::init() {
 
 bool GameState::init(int w, int h) {
 	printf("GameState::init(%d, %d)\n", w, h);
+	curGameState = GAME_STATE_INIT;
 	displayWidth = w;
 	displayHeight = h;
 	//bool ret = false;
@@ -266,7 +267,7 @@ int GameState::getTargetBitmapHeight() const {
 }
 
 // targetBitmap을 target bitmap으로 한다.
-void GameState::beginSystemTargetBitmapContext() {
+void GameState::beginSystemBitmapContext() {
 	al_set_target_bitmap(systemTargetBitmap);
 }
 

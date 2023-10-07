@@ -81,7 +81,8 @@ int main(int argc, char* argv[])
 	}
 
 	GameState* gameState = GameState::getInstance();
-	if (!gameState->init()) {
+	//if (!gameState->init()) {
+	if (!gameState->init(640, 480)) {
 		fprintf(stderr, "Failed to initialize game state: program aborted\n");
 		//delete gameState;
 		return -1;
@@ -116,7 +117,7 @@ int main(int argc, char* argv[])
 	sprBG1->setScale(bgScale);
 
 	Player* player = new Player();
-	if (!player->init("img/Actor1.png")) {
+	if (!player->init("img/Animal.png")) {
 		fprintf(stderr, "could not initialize object 'player'\n");
 		return -1;
 	}
@@ -198,9 +199,9 @@ int main(int argc, char* argv[])
 
 	DialogBox* dbox = new DialogBox();
 	dbox->loadScript("text/text2.txt");
-	dbox->dockBottom();
 	dbox->setMargin(5, 5, 10, 10);
 	dbox->setPadding(5, 5, 10, 5);
+	dbox->setFrameVisible(false);
 	bool textAreaVisible = false;
 
 	bool boundBoxVisible = false;
@@ -211,7 +212,11 @@ int main(int argc, char* argv[])
 	//gameState->setCurrentGameState(GAME_STATE_INIT); // init 시점이나 스플래시 화면에 필요 데이터 메모리에 로드
 	gameState->setCurrentGameState(GAME_STATE_SPLASH); // 스플래시 화면 출력
 	int curGameState = gameState->getCurrentGameState();
-	int splashCnt = 300;
+	int splashCnt = 150;
+	// ================================================
+
+	// Test Variables =================================
+	int uiDockStateIdx = 0;
 	// ================================================
 
 	while (mainLoop) {
@@ -308,6 +313,7 @@ int main(int argc, char* argv[])
 			else if (keycode == ALLEGRO_KEY_F7) {
 				dbox->show(0);
 			}
+			// F8: Draw Text Area (=DialogBox's Content Area)
 			else if (keycode == ALLEGRO_KEY_F8) {
 				textAreaVisible = !textAreaVisible;
 			}
@@ -330,6 +336,51 @@ int main(int argc, char* argv[])
 				ustrDisp = true;
 				ustrIdx = 0;
 				rateCnt = 0;
+			}
+			/* UI Frame Test */
+			else if (keycode == ALLEGRO_KEY_Q) {
+				uiDockStateIdx--;
+			}
+			else if (keycode == ALLEGRO_KEY_E) {
+				uiDockStateIdx++;
+			}
+
+			if (keycode == ALLEGRO_KEY_Q || keycode == ALLEGRO_KEY_E) {
+				if (uiDockStateIdx < 0)
+					uiDockStateIdx = 6;
+				else if (uiDockStateIdx > 6)
+					uiDockStateIdx = 0;
+				switch (uiDockStateIdx) {
+				case 0:
+					dbox->dockBottom();
+					printf("dbox->dockBottom()\n");
+					break;
+				case 1:
+					dbox->dockTop();
+					printf("dbox->dockTop()\n");
+					break;
+				case 2:
+					dbox->dockMiddle();
+					printf("dbox->dockMiddle()\n");
+					break;
+				case 3:
+					dbox->dockBottomHalf();
+					printf("dbox->dockBottomHalf()\n");
+					break;
+				case 4:
+					dbox->dockTopHalf();
+					printf("dbox->dockTopHalf()\n");
+					break;
+				case 5:
+					dbox->dockLeftHalf();
+					printf("dbox->dockLeftHalf()\n");
+					break;
+				case 6:
+					dbox->dockRightHalf();
+					printf("dbox->dockRightHalf()\n");
+					break;
+				}
+				dbox->reallocUITargetBitmap();
 			}
 
 			displayWidth = gameState->getDisplayWidth();
@@ -359,17 +410,19 @@ int main(int argc, char* argv[])
 			
 			if (curGameState == GAME_STATE_RUNNING) {
 				/* targetBitmap에 먼저 게임 화면을 draw한다. */
-				gameState->beginSystemTargetBitmapContext();
+				gameState->beginSystemBitmapContext();
 				al_clear_to_color(al_map_rgb(0, 0, 255));
 
 				//sprBG1->draw();
 				//sprBG1->draw(gameState->getScroller()->getScaledViewPort(bgScale));
 				//sprBG1->draw(scroll->getViewPort());
 
+				/* 레이어 별 맵 출력 */
 				const Rect* rc = gameState->getScroller()->getScaledViewPort(bgScale);
 				al_draw_bitmap_region(layer1->getLayerBitmap(), rc->x, rc->y, rc->width, rc->height, 0, 0, 0);
 				//al_draw_bitmap(map1Layer1->getLayerBitmap(), 0, 0, 0);
 
+				/* 플레이어 및 게임 오브젝트 출력 */
 				player->draw();
 				npc1->draw();
 				npc2->draw();
@@ -382,10 +435,13 @@ int main(int argc, char* argv[])
 				//sprintf(buf, "[%f, %f]", spr1->getX(), spr1->getY());
 				//al_draw_text(gameState->getBuiltinFont(), al_map_rgb(255, 255, 255), 10.0f, 10.0f, ALLEGRO_ALIGN_LEFT, buf);
 
+				/* UI 출력 */
+				// UI 출력 우선순위는 맵과 플레이어, 게임 오브젝트 다음으로
+				//dbox->drawUIArea();
 				dbox->draw();
 
 				if (textAreaVisible) {
-					Rect rcText = dbox->getTextArea();
+					Rect rcText = dbox->getContentArea();
 					al_draw_rectangle(rcText.x, rcText.y, rcText.x + rcText.width, rcText.y + rcText.height, al_map_rgb(0xff, 0, 0), 1.0f);
 				}
 
@@ -426,7 +482,7 @@ int main(int argc, char* argv[])
 				al_flip_display();
 			}
 			else if (curGameState == GAME_STATE_SPLASH) {
-				gameState->beginSystemTargetBitmapContext();
+				gameState->beginSystemBitmapContext();
 				al_clear_to_color(al_map_rgb(0, 0, 0));
 				sprSplashScreen->draw();
 

@@ -25,6 +25,8 @@ enum {
 	GAME_STATE_SPLASH,
 	GAME_STATE_RUNNING,
 	GAME_STATE_PAUSE,
+	GAME_STATE_UI_TITLE,
+//	GAME_STATE_UI_MENU,
 	GAME_STATE_UNKNOWN = -1
 };
 
@@ -95,7 +97,7 @@ public:
 	//ALLEGRO_BITMAP* getDisplayBitmap() const;
 	int getTargetBitmapWidth() const;
 	int getTargetBitmapHeight() const;
-	void beginSystemTargetBitmapContext();
+	void beginSystemBitmapContext();
 	void beginDisplayBitmapContext();
 
 	int getDisplayWidth() const;

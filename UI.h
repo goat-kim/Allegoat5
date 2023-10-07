@@ -8,10 +8,14 @@
 class Sprite;
 struct ALLEGRO_BITMAP;
 
+// Padding과 Margin
+// Margin: 테두리(border)를 기준으로 바깥 여백
+// Padding: 테두리 내부와 내용(content) 사이의 여백
 class UI {
 protected:
 	/* 색상 관련 정보 */
 	bool visible;
+	bool frameVisible;
 	unsigned char alpha;	// 투명도
 	ColorRGB tint;			// 색상 효과
 	ColorRGB colorKey;		// 컬러키 (투명색)
@@ -32,6 +36,10 @@ public:
 
 	bool isVisible() const;
 	void setVisible(bool v);
+
+	bool isFrameVisible() const;
+	void setFrameVisible(bool v);
+
 	virtual void setColorKey(unsigned char r, unsigned char g, unsigned char b); // 자식 클래스에 따라 구현이 달라질 수 있음
 	void setTintColor(unsigned char r, unsigned char g, unsigned char b);
 	int getAlpha() const;
@@ -81,26 +89,24 @@ public:
 
 	void undock();			// 기본값; rect의 정보에 따라 배치됨
 
+	Rect getBorderArea() const;
+	Rect getContentArea() const;
+	void drawUIArea();
+
 	virtual void draw() = 0;
 };
-
-// 유니코드 문자, 문자열을 어떻게 관리할지?
-// 대사 처리 등등.. (파일 입출력, 유니코드 문제)
-// 
-
-
 
 class DialogBox : public UI {
 private:
 	ALLEGRO_FONT* dboxMsgFont;
 	Sprite* dboxSpr;
 
-	int rate;
+	int cursorBlinkRate;
+	int rate;	// 대사의 출력 속도
 	int rateOrigin;
 	int delayCnt;
-	//int cursorPos;
-	//bool busy;
-	int state = DBOX_STATE_NONE;
+
+	int state = DBOX_STATE_CLOSED;
 	ALLEGRO_USTR* usDisplay;
 	ALLEGRO_BITMAP* dboxTargetBitmap;
 
@@ -112,13 +118,13 @@ private:
 	int curMsgIdx;
 	bool blocking;	// 대사 출력 시 게임 블로킹(일시 정지) 여부
 
-	bool frameVisible;
-
 	int xKeyCount;
 	int cKeyCount;
 
+	bool truncated = false;
+
 public:
-	enum { DBOX_STATE_NONE = 0, DBOX_STATE_BUSY, DBOX_STATE_IDLE, DBOX_STATE_CLOSING };
+	enum { DBOX_STATE_CLOSED = 0, DBOX_STATE_BUSY, DBOX_STATE_IDLE, DBOX_STATE_TRUNCATED, DBOX_STATE_UNKNOWN };
 	// message
 	// cursor
 	// current cursor: 현재 문자가 출력될 위치
@@ -134,6 +140,7 @@ public:
 	bool loadUISprite(const char* pathname);
 	void update();
 	void draw();
+	void clear(); // 반드시 dboxTargetBitmap을 target일 때 호출할 것
 	void drawUIFrame();
 	void drawChar();
 	//void drawChar(int32_t code);
@@ -141,7 +148,7 @@ public:
 	int peekNextChar() const;
 
 	void show(int idx, bool blocking = false);
-	void showNext(bool blocking = false);
+	//void showNext(bool blocking = false);
 
 	//void setMessageRate(int r);
 
@@ -152,8 +159,12 @@ public:
 	int getRate() const;
 	void setRate(int r);
 
-	Rect getTextArea() const;
+	void reallocUITargetBitmap();
 };
+
+// class Menu: public UI {
+// private:
+// };
 
 // 1. UI 객체: FIFO(또는 vector)로 리스트를 유지하는 건 어떨까?
 // - 리스트 순서대로 렌더링됨
