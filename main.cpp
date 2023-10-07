@@ -201,7 +201,7 @@ int main(int argc, char* argv[])
 	dbox->loadScript("text/text2.txt");
 	dbox->setMargin(5, 5, 10, 10);
 	dbox->setPadding(5, 5, 10, 5);
-	dbox->setFrameVisible(false);
+	dbox->setFrameVisible(true);
 	bool textAreaVisible = false;
 
 	bool boundBoxVisible = false;
@@ -212,11 +212,14 @@ int main(int argc, char* argv[])
 	//gameState->setCurrentGameState(GAME_STATE_INIT); // init 시점이나 스플래시 화면에 필요 데이터 메모리에 로드
 	gameState->setCurrentGameState(GAME_STATE_SPLASH); // 스플래시 화면 출력
 	int curGameState = gameState->getCurrentGameState();
-	int splashCnt = 150;
+	int splashCnt = 600;
+	Sprite *sprTitle = new Sprite();
+	sprTitle->load("img/title-sample1.png");
 	// ================================================
 
 	// Test Variables =================================
 	int uiDockStateIdx = 0;
+	int retKeyCount = -1;
 	// ================================================
 
 	while (mainLoop) {
@@ -225,7 +228,7 @@ int main(int argc, char* argv[])
 
 		switch (ev.type) {
 		case ALLEGRO_EVENT_TIMER:
-			// on update routine ========================================================================
+			/* Update routine ======================================================================== */
 			redraw = true;
 
 			gameState->update();
@@ -255,16 +258,46 @@ int main(int argc, char* argv[])
 				//printf("vp.diff: [%d, %d]\n", scroll->getDx(), scroll->getDy());
 			}
 			else if (curGameState == GAME_STATE_SPLASH) {
-				if (splashCnt <= 0)
-					gameState->setCurrentGameState(GAME_STATE_RUNNING);
-				printf("splashCnt: %d\n", splashCnt);
+				if (splashCnt <= 0) {
+					gameState->setCurrentGameState(GAME_STATE_TITLE);
+					printf("Set current game state to GAME_STATE_TITLE\n");
+				}
+				//printf("splashCnt: %d\n", splashCnt);
 				splashCnt--;
+			}
+
+			else if (curGameState == GAME_STATE_TITLE) {
+				if (gameState->isKeyDown(ALLEGRO_KEY_ENTER)) {
+					if (retKeyCount == -1) {
+						retKeyCount = 180;
+					}
+					else if (retKeyCount == 0) {
+						gameState->setCurrentGameState(GAME_STATE_RUNNING);
+					}
+					switch (retKeyCount) {
+					case 180:
+						printf("3!!!\n");
+						break;
+					case 120:
+						printf("2!!!\n");
+						break;
+					case 60:
+						printf("1!!!\n");
+						break;
+					}
+					retKeyCount--;
+				}
+
+				if (gameState->isKeyUp(ALLEGRO_KEY_ENTER)) {
+					retKeyCount = -1;
+				}
 			}
 
 			if (gameState->isKeyDown(ALLEGRO_KEY_ESCAPE))
 				mainLoop = false;
 			break;
-			// ==========================================================================================
+			/* ======================================================================================= */
+
 		case ALLEGRO_EVENT_KEY_DOWN:
 			//if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
 			//	mainLoop = false;
@@ -495,6 +528,28 @@ int main(int argc, char* argv[])
 					displayWidth, displayHeight, 0);
 				al_flip_display();
 			}
+			else if (curGameState == GAME_STATE_TITLE) {
+				gameState->beginSystemBitmapContext();
+				al_clear_to_color(al_map_rgb(0, 0, 0));
+				sprTitle->draw();
+				al_draw_text(gameState->getBuiltinFont(), 
+					al_map_rgb(128, 128, 0), 160, 150, ALLEGRO_ALIGN_CENTRE, 
+					"Press Enter to start game");
+				
+				gameState->beginDisplayBitmapContext();
+				al_draw_scaled_bitmap(
+					gameState->getSystemTargetBitmap(),
+					0,
+					0,
+					gameState->getTargetBitmapWidth(),
+					gameState->getTargetBitmapHeight(),
+					0,
+					0,
+					displayWidth,
+					displayHeight,
+					0);
+				al_flip_display();
+			}
 
 			/* End Drawing */
 			redraw = false;
@@ -502,6 +557,8 @@ int main(int argc, char* argv[])
 	}
 
 	al_destroy_font(font1);
+
+	delete sprTitle;
 
 	delete dbox;
 
