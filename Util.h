@@ -8,11 +8,20 @@
 #define BUF_SIZE	512
 //const int DEFAULT_DISPLAY_WIDTH = 1280;
 //const int DEFAULT_DISPLAY_HEIGHT = 1024;
+
 const int DEFAULT_DISPLAY_WIDTH = 320;
 const int DEFAULT_DISPLAY_HEIGHT = 240;
 
 const int TARGET_BITMAP_WIDTH = 320;
 const int TARGET_BITMAP_HEIGHT = 240;
+
+/*
+const int DEFAULT_DISPLAY_WIDTH = 640;
+const int DEFAULT_DISPLAY_HEIGHT = 480;
+
+const int TARGET_BITMAP_WIDTH = 640;
+const int TARGET_BITMAP_HEIGHT = 480;
+*/
 
 typedef struct Rect {
 	int x, y;

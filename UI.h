@@ -96,15 +96,18 @@ public:
 	virtual void draw() = 0;
 };
 
+/* 카운터 값들은 모두 프레임을 단위로 동기된다. */
 class DialogBox : public UI {
 private:
 	ALLEGRO_FONT* dboxMsgFont;
 	Sprite* dboxSpr;
 
-	int cursorBlinkRate;
-	int rate;	// 대사의 출력 속도
-	int rateOrigin;
-	int delayCnt;
+	int cursorBlinkRate;	// 커서의 깜빡임 속도
+	int blinkCnt;			// 경과 시간 측정용 카운터
+
+	int rate;				// 대사의 출력 속도
+	int rateOrigin;			// 대사 빨리 넘김 시 원래 출력 속도 유지용도
+	int delayCnt;			// 경과 시간 측정을 위해 사용되는 카운터
 
 	int state = DBOX_STATE_CLOSED;
 	ALLEGRO_USTR* usDisplay;
@@ -173,3 +176,71 @@ public:
 // 
 // 2. GameState에 현재 focus된 UI 객체나 객체의 ID를 지정하게 해볼까?
 //
+
+// sysUIColorKey: al_map_rgb(0xff, 0x9c, 0x00)
+//enum SYSTEM_UI_REGION_IDX
+enum {
+	SYSTEM_UI_REGION_IDX_BACKGROUND = 0,
+	SYSTEM_UI_REGION_IDX_UI_FRAME = 1,
+	SYSTEM_UI_REGION_IDX_UI_FRAME_UP_ARROW = 13,
+	SYSTEM_UI_REGION_IDX_UI_FRAME_DOWN_ARROW = 14,
+	SYSTEM_UI_REGION_IDX_UI_ITEM_1 = 15,
+	SYSTEM_UI_REGION_IDX_UI_ITEM_2 = 29,
+	SYSTEM_UI_REGION_IDX_UI_ITEM_BLANK = 28,
+	SYSTEM_UI_REGION_IDX_NUM_0 = 41
+};
+
+const Rect sysUIRegionList[] = {
+	// x,  y,  w,  h
+	{  0,  0, 32, 32 },	// background (idx:1)
+	{ 32,  0,  8,  8 }, // UI frame
+	{ 40,  0,  8,  8 },
+	{ 48,  0,  8,  8 },
+	{ 56,  0,  8,  8 }, 
+	{ 32,  8,  8,  8 },
+	{ 56,  8,  8,  8 },
+	{ 32, 16,  8,  8 },
+	{ 56, 16,  8,  8 },
+	{ 32, 24,  8,  8 }, 
+	{ 40, 24,  8,  8 }, 
+	{ 48, 24,  8,  8 }, 
+	{ 56, 24,  8,  8 }, 
+	{ 40,  8, 16,  8 }, // UI frame up arrow (idx:14)
+	{ 40, 16, 16,  8 }, // UI frame down arrow (idx:15)
+	{ 64,  0,  8,  8 }, // UI item 1 (idx:16)
+	{ 72,  0,  8,  8 }, 
+	{ 80,  0,  8,  8 }, 
+	{ 88,  0,  8,  8 }, 
+	{ 64,  8,  8,  8 }, 
+	{ 88,  8,  8,  8 }, 
+	{ 64, 16,  8,  8 }, 
+	{ 88, 16,  8,  8 }, 
+	{ 64, 24,  8,  8 }, 
+	{ 72, 24,  8,  8 }, 
+	{ 80, 24,  8,  8 }, 
+	{ 88, 24,  8,  8 }, 
+	{ 72,  8,  8,  8 }, // UI item blank (green, idx:29)
+	{ 96,  0,  8,  8 }, // UI item 2 (idx:30)
+	{ 104,  0,  8,  8 }, 
+	{ 112,  0,  8,  8 }, 
+	{ 120,  0,  8,  8 }, 
+	{ 96,   8,  8,  8 }, 
+	{ 120,  8,  8,  8 }, 
+	{ 96,  16,  8,  8 }, 
+	{ 120, 16,  8,  8 }, 
+	{ 96,  24,  8,  8 }, 
+	{ 104, 24,  8,  8 }, 
+	{ 112, 24,  8,  8 }, 
+	{ 120, 24,  8,  8 }, 
+	{  32, 32,  8, 16 }, // Numeric 0 (idx:42)
+	{  40, 32,  8, 16 }, 
+	{  48, 32,  8, 16 }, 
+	{  56, 32,  8, 16 }, 
+	{  64, 32,  8, 16 }, 
+	{  72, 32,  8, 16 }, 
+	{  80, 32,  8, 16 }, 
+	{  88, 32,  8, 16 }, 
+	{  96, 32,  8, 16 }, 
+	{ 104, 32,  8, 16 }, 
+	{ 112, 32,  8, 16 }, 
+};

@@ -314,6 +314,13 @@ void MyObject::update() {
 - 스플래시 화면은 로딩이 완료되거나 일정 시점 이후에 자동으로 다음 상태(화면)로 전환
  - 관련 자료구조를 정의할 것
 
+## 통계 정보
+- 걸음 수
+- 총 플레이 시간
+- 총 세이브/로드 횟수
+- 게임오버 횟수
+- 
+
 References
 - https://github.com/liballeg/allegro_wiki/wiki/Allegro-Vivace
 

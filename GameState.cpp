@@ -10,6 +10,7 @@
 
 GameState* GameState::instance = nullptr;
 
+/* Constructors and Destructor */
 GameState::GameState()
 	: display(nullptr), eventQueue(nullptr), timer(nullptr), builtinFont(nullptr),
 	displayWidth(DEFAULT_DISPLAY_WIDTH), displayHeight(DEFAULT_DISPLAY_HEIGHT),
@@ -29,9 +30,10 @@ GameState::~GameState() {
 	printf("~GameState()\n");
 	if (scroller)
 		delete scroller;
-	destoryAllegroObjects();
+	destroyAllegroObjects();
 }
 
+/* Private member functions */
 void GameState::registerEventSources() {
 	printf("GameState::registerEventSources()\n");
 	al_register_event_source(eventQueue, al_get_keyboard_event_source());
@@ -40,7 +42,53 @@ void GameState::registerEventSources() {
 	al_register_event_source(eventQueue, al_get_timer_event_source(timer));
 }
 
-void GameState::destoryAllegroObjects() {
+bool GameState::loadBuiltinFont() {
+	if (!(builtinFont = al_create_builtin_font())) {
+		fprintf(stderr, "E: failed to create builtin font\n");
+		return false;
+	}
+	return true;
+}
+
+bool GameState::loadSystemFonts() {
+	if (!(sans12 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SANS, 12, ALLEGRO_TTF_MONOCHROME))) {
+		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SANS);
+		return false;
+	}
+	if (!(sans14 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SANS, 14, ALLEGRO_TTF_MONOCHROME))) {
+		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SANS);
+		return false;
+	}
+	if (!(sans16 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SANS, 16, ALLEGRO_TTF_MONOCHROME))) {
+		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SANS);
+		return false;
+	}
+	if (!(sans18 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SANS, 18, ALLEGRO_TTF_MONOCHROME))) {
+		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SANS);
+		return false;
+	}
+
+	if (!(serif12 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SERIF, 12, ALLEGRO_TTF_MONOCHROME))) {
+		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SERIF);
+		return false;
+	}
+	if (!(serif14 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SERIF, 14, ALLEGRO_TTF_MONOCHROME))) {
+		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SERIF);
+		return false;
+	}
+	if (!(serif16 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SERIF, 16, ALLEGRO_TTF_MONOCHROME))) {
+		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SERIF);
+		return false;
+	}
+	if (!(serif18 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SERIF, 18, ALLEGRO_TTF_MONOCHROME))) {
+		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SERIF);
+		return false;
+	}
+
+	return true;
+}
+
+void GameState::destroyAllegroObjects() {
 	if (systemTargetBitmap)
 		al_destroy_bitmap(systemTargetBitmap);
 	if (display)
@@ -93,51 +141,23 @@ bool GameState::init(int w, int h) {
 	displayHeight = h;
 	//bool ret = false;
 	if (!(eventQueue = al_create_event_queue())) {
-		fprintf(stderr, "E: failed to create event queue\n");
+		fprintf(stderr, "GameState::init(): failed to create event queue\n");
 		return false;
 	}
 	// 60fps
 	if (!(timer = al_create_timer(1.0 / 60.0))) {
-		fprintf(stderr, "E: failed to create main timer\n");
+		fprintf(stderr, "GameState::init(): failed to create main timer\n");
 		return false;
 	}
 
-	if (!(builtinFont = al_create_builtin_font())) {
-		fprintf(stderr, "E: failed to create builtin font\n");
+	/* Load fonts */
+	if (loadBuiltinFont() == false) {
+		fprintf(stderr, "GameState::loadBuiltinFont(): failed to load the builtin font\n");
 		return false;
 	}
 
-	if (!(sans12 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SANS, 12, ALLEGRO_TTF_MONOCHROME))) {
-		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SANS);
-		return false;
-	}
-	if (!(sans14 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SANS, 14, ALLEGRO_TTF_MONOCHROME))) {
-		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SANS);
-		return false;
-	}
-	if (!(sans16 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SANS, 16, ALLEGRO_TTF_MONOCHROME))) {
-		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SANS);
-		return false;
-	}
-	if (!(sans18 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SANS, 18, ALLEGRO_TTF_MONOCHROME))) {
-		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SANS);
-		return false;
-	}
-
-	if (!(serif12 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SERIF, 12, ALLEGRO_TTF_MONOCHROME))) {
-		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SERIF);
-		return false;
-	}
-	if (!(serif14 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SERIF, 14, ALLEGRO_TTF_MONOCHROME))) {
-		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SERIF);
-		return false;
-	}
-	if (!(serif16 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SERIF, 16, ALLEGRO_TTF_MONOCHROME))) {
-		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SERIF);
-		return false;
-	}
-	if (!(serif18 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SERIF, 18, ALLEGRO_TTF_MONOCHROME))) {
-		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SERIF);
+	if (loadSystemFonts() == false) {
+		fprintf(stderr, "GameState::loadSystemFonts(): failed to load system fonts\n");
 		return false;
 	}
 
@@ -146,7 +166,7 @@ bool GameState::init(int w, int h) {
 	oldDisplayFlags = al_get_new_display_flags();
 
 	if (!(display = al_create_display(displayWidth, displayHeight))) {
-		fprintf(stderr, "E: failed to create display\n");
+		fprintf(stderr, "GameState::init(): failed to create display\n");
 		return false;
 	}
 
@@ -154,7 +174,7 @@ bool GameState::init(int w, int h) {
 	displayBitmap = al_get_target_bitmap();
 	systemTargetBitmap = al_create_bitmap(TARGET_BITMAP_WIDTH, TARGET_BITMAP_HEIGHT);
 	if (!systemTargetBitmap) {
-		fprintf(stderr, "E: failed to create target bitmap\n");
+		fprintf(stderr, "GameState::init(): failed to create target bitmap\n");
 		return false;
 	}
 	bitmapWidth = TARGET_BITMAP_WIDTH;
@@ -215,7 +235,7 @@ ALLEGRO_FONT* GameState::getSystemFont(int type, int size) const {
 			break;
 		}
 	}
-	else if (type == GAME_STATE_SYSTEM_FONT_SANS) {
+	else if (type == GAME_STATE_SYSTEM_FONT_SERIF) {
 		switch (size) {
 		case 12:
 			return serif12;
@@ -401,30 +421,8 @@ bool GameState::isFullscreen() const {
 }
 
 void GameState::toggleFullscreen() {
-	/*
-	if (!fullscreen) {
-		printf("to fullscreen\n");
-		al_set_new_display_flags(ALLEGRO_FULLSCREEN);
-	}
-	else {
-		printf("to window\n");
-		al_set_new_display_flags(oldDisplayFlags);
-	}
-
-	ALLEGRO_DISPLAY* oldDisplay = display;
-	display = al_create_display(displayWidth, displayHeight);
-	displayBitmap = al_get_backbuffer(display);
-	al_register_event_source(eventQueue, al_get_display_event_source(display));
-
-	if (oldDisplay)
-		al_destroy_display(oldDisplay);
-	*/
 	fullscreen = !fullscreen;
-	//printf("fullscreen ");
-	//if (fullscreen)
-	//	printf("on\n");
-	//else
-	//	printf("off\n");
+
 	al_toggle_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, fullscreen);
 	displayWidth = al_get_display_width(display);
 	displayHeight = al_get_display_height(display);

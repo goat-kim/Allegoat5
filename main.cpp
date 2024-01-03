@@ -199,6 +199,8 @@ int main(int argc, char* argv[])
 
 	DialogBox* dbox = new DialogBox();
 	dbox->loadScript("text/text2.txt");
+	//dbox->loadUISprite("img/System.png");
+	//printf("dbox->loadUISprite(%s): %d", "img/System.png", dbox->loadUISprite("img/System.png"));
 	dbox->setMargin(5, 5, 10, 10);
 	dbox->setPadding(5, 5, 10, 5);
 	dbox->setFrameVisible(true);
@@ -212,14 +214,17 @@ int main(int argc, char* argv[])
 	//gameState->setCurrentGameState(GAME_STATE_INIT); // init 시점이나 스플래시 화면에 필요 데이터 메모리에 로드
 	gameState->setCurrentGameState(GAME_STATE_SPLASH); // 스플래시 화면 출력
 	int curGameState = gameState->getCurrentGameState();
-	int splashCnt = 600;
+	int splashCnt = 60;
 	Sprite *sprTitle = new Sprite();
-	sprTitle->load("img/title-sample1.png");
+	sprTitle->load("img/title-sample3.png");
 	// ================================================
 
 	// Test Variables =================================
 	int uiDockStateIdx = 0;
 	int retKeyCount = -1;
+	const int BLINK_RATE = 40;
+	int blinkCnt = BLINK_RATE;
+	bool drawEn = true;
 	// ================================================
 
 	while (mainLoop) {
@@ -268,28 +273,23 @@ int main(int argc, char* argv[])
 
 			else if (curGameState == GAME_STATE_TITLE) {
 				if (gameState->isKeyDown(ALLEGRO_KEY_ENTER)) {
+					// 키를 떼고 있으면 -1, 누르면 프레임 당 1씩 감소
 					if (retKeyCount == -1) {
-						retKeyCount = 180;
+						retKeyCount = 1;
 					}
 					else if (retKeyCount == 0) {
 						gameState->setCurrentGameState(GAME_STATE_RUNNING);
-					}
-					switch (retKeyCount) {
-					case 180:
-						printf("3!!!\n");
-						break;
-					case 120:
-						printf("2!!!\n");
-						break;
-					case 60:
-						printf("1!!!\n");
-						break;
 					}
 					retKeyCount--;
 				}
 
 				if (gameState->isKeyUp(ALLEGRO_KEY_ENTER)) {
 					retKeyCount = -1;
+				}
+				blinkCnt--;
+				if (blinkCnt == 0) {
+					drawEn = !drawEn;
+					blinkCnt = BLINK_RATE;
 				}
 			}
 
@@ -532,9 +532,11 @@ int main(int argc, char* argv[])
 				gameState->beginSystemBitmapContext();
 				al_clear_to_color(al_map_rgb(0, 0, 0));
 				sprTitle->draw();
-				al_draw_text(gameState->getBuiltinFont(), 
-					al_map_rgb(128, 128, 0), 160, 150, ALLEGRO_ALIGN_CENTRE, 
-					"Press Enter to start game");
+				if (drawEn) {
+					al_draw_text(gameState->getBuiltinFont(), 
+						al_map_rgb(128, 128, 0), 160, 150, ALLEGRO_ALIGN_CENTRE, 
+						"Press Enter to start game");
+				}
 				
 				gameState->beginDisplayBitmapContext();
 				al_draw_scaled_bitmap(

@@ -8,6 +8,8 @@
 #include "GameState.h"
 #include "Sprite.h"
 
+//extern const Rect sysUIRegionList[];
+
 UI::UI()
 	: visible(true), frameVisible(true), alpha(255), tint(0, 0, 0), colorKey(0, 0, 0),
 	rect(0, 0, DEFAULT_DISPLAY_WIDTH, DEFAULT_DISPLAY_HEIGHT),
@@ -315,6 +317,7 @@ DialogBox::DialogBox() :
 	
 	dboxTargetBitmap = al_create_bitmap(rect.width, rect.height);
 	dboxMsgFont = GameState::getInstance()->getSystemFont(GAME_STATE_SYSTEM_FONT_SANS, 12);
+	//dboxMsgFont = GameState::getInstance()->getSystemFont(GAME_STATE_SYSTEM_FONT_SERIF, 12);
 	
 	curMsgIdx = 0;
 	blocking = false;
@@ -338,6 +341,7 @@ bool DialogBox::loadScript(const char* pathname) {
 }
 
 bool DialogBox::loadUISprite(const char* pathname) {
+	printf("DialogBox::loadUISprite");
 	return dboxSpr->load(pathname);
 }
 
@@ -452,6 +456,7 @@ void DialogBox::drawUIFrame() {
 	}
 	else {
 		//dboxSpr->draw();
+		dboxSpr->draw();
 	}
 }
 
@@ -548,6 +553,8 @@ int DialogBox::getRate() const {
 	return rateOrigin;
 }
 
+// UI 사이즈가 변경될 경우 UI가 출력되는 비트맵 사이즈를 변경해야 한다
+// 기존의 비트맵을 할당 해제하고 다시 생성
 void DialogBox::reallocUITargetBitmap() {
 	if (dboxTargetBitmap) {
 		al_destroy_bitmap(dboxTargetBitmap);

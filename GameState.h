@@ -5,7 +5,9 @@
 //static const char* GAME_TITLE = "Goat Simulator";
 
 static const char* GAME_STATE_SYSTEM_FONT_PATH_SANS = "font/Dotum-03.ttf";
-static const char* GAME_STATE_SYSTEM_FONT_PATH_SERIF = "font/Batang-01.ttf";
+//static const char* GAME_STATE_SYSTEM_FONT_PATH_SANS = "font/pf_stardust.ttf";
+//static const char* GAME_STATE_SYSTEM_FONT_PATH_SANS = "font/ramche.ttf";
+static const char* GAME_STATE_SYSTEM_FONT_PATH_SERIF = "font/IyagiGGC.ttf";
 
 struct ALLEGRO_DISPLAY;
 struct ALLEGRO_EVENT_QUEUE;
@@ -66,7 +68,9 @@ private:
 
 private:
 	void registerEventSources();
-	void destoryAllegroObjects();
+	bool loadBuiltinFont();
+	bool loadSystemFonts();
+	void destroyAllegroObjects();
 
 private:
 	GameState();
