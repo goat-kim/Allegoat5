@@ -341,8 +341,14 @@ bool DialogBox::loadScript(const char* pathname) {
 }
 
 bool DialogBox::loadUISprite(const char* pathname) {
-	printf("DialogBox::loadUISprite");
+	dboxSpr = new Sprite();
 	return dboxSpr->load(pathname);
+}
+
+void DialogBox::setUISpriteColorKey(int r, int g, int b) {
+	if (!dboxSpr)
+		return;
+	dboxSpr->setColorKey(r, g, b);
 }
 
 void DialogBox::update() {
@@ -452,11 +458,72 @@ void DialogBox::drawUIFrame() {
 			marginLeft, marginTop,
 			rect.width - marginRight,
 			rect.height - marginBottom,
-			al_map_rgba(0, 128, 0, 128));
+			al_map_rgba(0, 128, 0, alpha));
 	}
 	else {
 		//dboxSpr->draw();
-		dboxSpr->draw();
+		Rect contRc = getBorderArea();
+		printf("Dialogbox size: %d, %d\n", contRc.width, contRc.height);
+		printf("UI Frame block size: %d, %d\n", sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME].width, sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME].height);
+		float contScaleX = (float)contRc.width / sysUIRegionList[SYSTEM_UI_REGION_IDX_BACKGROUND].width;
+		float contScaleY = (float)contRc.height / sysUIRegionList[SYSTEM_UI_REGION_IDX_BACKGROUND].height;
+		/* draw UI background (border area) */
+		dboxSpr->setXY(marginLeft, marginTop);
+		dboxSpr->setScale(contScaleX, contScaleY);
+		dboxSpr->draw(&sysUIRegionList[SYSTEM_UI_REGION_IDX_BACKGROUND]);
+		dboxSpr->setScale(1.0f, 1.0f);
+
+		/* draw UI frame */
+		// base position: (marginLeft, marginTop)
+		int dx = marginLeft;
+		int dy = marginTop;
+		int uiBlockWidth = sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME].width;
+		int uiBlockHeight = sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME].height;
+		// 가장자리를 제외한 길이 계산
+		int uiMidWidth = contRc.width - (uiBlockWidth * 2);
+		int uiMidHeight = contRc.height - (uiBlockWidth * 2);
+		float uiMidScaleX = (float)uiMidWidth / uiBlockWidth;
+		float uiMidScaleY = (float)uiMidHeight / uiBlockHeight;
+		// 좌측 상단 출력
+		dboxSpr->setXY(dx, dy);
+		dboxSpr->draw(&sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME_TOP_LEFT]);
+		dx += uiBlockWidth;
+		// 상단 중간 출력
+		dboxSpr->setX(dx);
+		dboxSpr->setScaleX(uiMidScaleX);
+		dboxSpr->draw(&sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME_TOP]);
+		dx += uiMidWidth;
+		// 우측 상단 출력
+		dboxSpr->setX(dx);
+		dboxSpr->setScaleX(1.0f);
+		dboxSpr->draw(&sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME_TOP_RIGHT]);
+		dx = marginLeft;		// 다시 왼쪽 끝으로
+		dy += uiBlockHeight;
+		// 좌측 중간 출력
+		dboxSpr->setXY(dx, dy);
+		dboxSpr->setScaleY(uiMidScaleY);
+		dboxSpr->draw(&sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME_LEFT]);
+		dx += uiBlockWidth + uiMidWidth;
+		// 우측 중간 출력
+		dboxSpr->setX(dx);
+		dboxSpr->draw(&sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME_RIGHT]);
+		dx = marginLeft;
+		dy += uiMidHeight;
+		// 좌측 하단 출력
+		dboxSpr->setXY(dx, dy);
+		dboxSpr->setScaleY(1.0f);
+		dboxSpr->draw(&sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME_BOTTOM_LEFT]);
+		dx += uiBlockWidth;
+		// 하단 중간 출력
+		dboxSpr->setX(dx);
+		dboxSpr->setScaleX(uiMidScaleX);
+		dboxSpr->draw(&sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME_BOTTOM]);
+		dx += uiMidWidth;
+		// 우측 하단 출력
+		dboxSpr->setX(dx);
+		dboxSpr->setScaleX(1.0f);
+		dboxSpr->draw(&sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME_BOTTOM_RIGHT]);
+		dboxSpr->setScale(1.0f, 1.0f);
 	}
 }
 

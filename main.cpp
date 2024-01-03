@@ -199,11 +199,13 @@ int main(int argc, char* argv[])
 
 	DialogBox* dbox = new DialogBox();
 	dbox->loadScript("text/text2.txt");
-	//dbox->loadUISprite("img/System.png");
-	//printf("dbox->loadUISprite(%s): %d", "img/System.png", dbox->loadUISprite("img/System.png"));
+	dbox->loadUISprite("img/System.png");
+	//FF9C00
+	dbox->setUISpriteColorKey(0xff, 0x9c, 0x00);
 	dbox->setMargin(5, 5, 10, 10);
 	dbox->setPadding(5, 5, 10, 5);
 	dbox->setFrameVisible(true);
+	dbox->setAlpha(128);
 	bool textAreaVisible = false;
 
 	bool boundBoxVisible = false;

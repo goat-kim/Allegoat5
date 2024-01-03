@@ -141,6 +141,7 @@ public:
 
 	bool loadScript(const char* pathname);
 	bool loadUISprite(const char* pathname);
+	void setUISpriteColorKey(int r, int g, int b);
 	void update();
 	void draw();
 	void clear(); // 반드시 dboxTargetBitmap을 target일 때 호출할 것
@@ -182,6 +183,14 @@ public:
 enum {
 	SYSTEM_UI_REGION_IDX_BACKGROUND = 0,
 	SYSTEM_UI_REGION_IDX_UI_FRAME = 1,
+	SYSTEM_UI_REGION_IDX_UI_FRAME_TOP_LEFT = 1,
+	SYSTEM_UI_REGION_IDX_UI_FRAME_TOP_RIGHT = 4,
+	SYSTEM_UI_REGION_IDX_UI_FRAME_BOTTOM_LEFT = 9,
+	SYSTEM_UI_REGION_IDX_UI_FRAME_BOTTOM_RIGHT = 12,
+	SYSTEM_UI_REGION_IDX_UI_FRAME_TOP = 2,
+	SYSTEM_UI_REGION_IDX_UI_FRAME_BOTTOM = 10,
+	SYSTEM_UI_REGION_IDX_UI_FRAME_LEFT = 5,
+	SYSTEM_UI_REGION_IDX_UI_FRAME_RIGHT = 6,
 	SYSTEM_UI_REGION_IDX_UI_FRAME_UP_ARROW = 13,
 	SYSTEM_UI_REGION_IDX_UI_FRAME_DOWN_ARROW = 14,
 	SYSTEM_UI_REGION_IDX_UI_ITEM_1 = 15,
