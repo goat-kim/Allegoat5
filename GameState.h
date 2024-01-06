@@ -97,6 +97,8 @@ public:
 	ALLEGRO_BITMAP* setTargetBitmap(ALLEGRO_BITMAP* target);
 	ALLEGRO_BITMAP* getCurrentTargetBitmap() const;
 	ALLEGRO_BITMAP* getSystemTargetBitmap() const;
+	ALLEGRO_BITMAP* getDisplayBitmap() const;
+	//ALLEGRO_BITMAP* getBackbufferBitmap() const;
 	ALLEGRO_BITMAP* setNewTargetBitmap(ALLEGRO_BITMAP* bitmap);
 	//ALLEGRO_BITMAP* getDisplayBitmap() const;
 	int getTargetBitmapWidth() const;

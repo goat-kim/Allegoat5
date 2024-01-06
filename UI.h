@@ -97,6 +97,10 @@ public:
 };
 
 /* 카운터 값들은 모두 프레임을 단위로 동기된다. */
+// TODO: 캐릭터 얼굴, 이름 출력
+// TODO: 스프라이트 기반 UI 스킨을 UI 클래스로 일반화할 것
+// TODO: 대사 출력 완료 시 커서 표시
+// 편의상 프리셋을 두는 것이 좋을 듯
 class DialogBox : public UI {
 private:
 	ALLEGRO_FONT* dboxMsgFont;
@@ -104,6 +108,7 @@ private:
 
 	int cursorBlinkRate;	// 커서의 깜빡임 속도
 	int blinkCnt;			// 경과 시간 측정용 카운터
+	bool cursorBlink;
 
 	int rate;				// 대사의 출력 속도
 	int rateOrigin;			// 대사 빨리 넘김 시 원래 출력 속도 유지용도
@@ -144,9 +149,11 @@ public:
 	void setUISpriteColorKey(int r, int g, int b);
 	void update();
 	void draw();
-	void clear(); // 반드시 dboxTargetBitmap을 target일 때 호출할 것
+	void cleanupUI(); // 반드시 dboxTargetBitmap을 target일 때 호출할 것
 	void drawUIFrame();
 	void drawChar();
+	void drawCursor();
+	bool isUICursorOn() const;
 	//void drawChar(int32_t code);
 	int getMessageDistance(int nextChrWidth = 0) const;
 	int peekNextChar() const;
@@ -162,6 +169,7 @@ public:
 
 	int getRate() const;
 	void setRate(int r);
+	void setCursorBlinkRate(int r);
 
 	void reallocUITargetBitmap();
 };

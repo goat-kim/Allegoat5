@@ -178,6 +178,9 @@ int main(int argc, char* argv[])
 	gameState->initMap();
 
 	gameState->startTimer();
+	printf("current bitmap: %p\n", gameState->getCurrentTargetBitmap());
+	printf("system target bitmap: %p\n", gameState->getSystemTargetBitmap());
+	printf("display bitmap: %p\n", gameState->getDisplayBitmap());
 	//sound1->play(true);
 
 	Scroller* ptScroll = gameState->getScroller();
@@ -205,7 +208,8 @@ int main(int argc, char* argv[])
 	dbox->setMargin(5, 5, 10, 10);
 	dbox->setPadding(5, 5, 10, 5);
 	dbox->setFrameVisible(true);
-	dbox->setAlpha(128);
+	// dbox->setAlpha(128);
+	// dbox->setCursorBlinkRate(10);
 	bool textAreaVisible = false;
 
 	bool boundBoxVisible = false;
@@ -474,6 +478,8 @@ int main(int argc, char* argv[])
 				// UI 출력 우선순위는 맵과 플레이어, 게임 오브젝트 다음으로
 				//dbox->drawUIArea();
 				dbox->draw();
+				if (dbox->isUICursorOn())
+					dbox->drawCursor();
 
 				if (textAreaVisible) {
 					Rect rcText = dbox->getContentArea();

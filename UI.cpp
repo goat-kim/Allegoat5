@@ -301,14 +301,22 @@ void UI::drawUIArea() {
 
 DialogBox::DialogBox() : 
 	dboxSpr(nullptr),
+	cursorBlinkRate(30),
+	blinkCnt(0),
+	cursorBlink(false),
+	rateOrigin(5),
+	delayCnt(0),
+	curPos(0),
 	xoffset(0), yoffset(0),
 	xKeyCount(-1),
-	cKeyCount(-1) {
+	cKeyCount(-1),
+	curMsgIdx(0),
+	blocking(false),
+	truncated(false)
+{
 	printf("DialogBox()\n");
 
-	rate = rateOrigin = 5;
-	delayCnt = 0;
-	curPos = 0;
+	rate = rateOrigin;
 	usDisplay = al_ustr_new(" ");
 	//busy = false;
 	state = DBOX_STATE_CLOSED;
@@ -319,10 +327,10 @@ DialogBox::DialogBox() :
 	dboxMsgFont = GameState::getInstance()->getSystemFont(GAME_STATE_SYSTEM_FONT_SANS, 12);
 	//dboxMsgFont = GameState::getInstance()->getSystemFont(GAME_STATE_SYSTEM_FONT_SERIF, 12);
 	
-	curMsgIdx = 0;
-	blocking = false;
+	// curMsgIdx = 0;
+	// blocking = false;
 
-	truncated = false;
+	// truncated = false;
 }
 
 DialogBox::~DialogBox() {
@@ -418,6 +426,7 @@ void DialogBox::update() {
 			if (code == -1) {
 				// 텍스트의 끝에 도달할 경우 입력 대기 상태인 DBOX_STATE_IDLE로 전환한다.
 				state = DBOX_STATE_IDLE;
+				blinkCnt = cursorBlinkRate;
 				printf("\n");
 				printf("DialogBox.state: DBOX_STATE_IDLE\n");
 			}
@@ -426,6 +435,16 @@ void DialogBox::update() {
 				drawChar();
 			}
 		}
+	}
+	else if (state == DBOX_STATE_IDLE) { // 텍스트 출력이 완료된 상태
+		if (blinkCnt == 0) {
+			blinkCnt = cursorBlinkRate;
+			cursorBlink = !cursorBlink;
+			printf("blink\n");
+		}
+		// if (cursorBlink)
+		// 	drawCursor();
+		blinkCnt--;
 	}
 	//else if (state == DBOX_STATE_IDLE) { // 화살표 커서 출력
 	//	//if (ptGameState->getKeyDown(ALLEGRO_KEY_C) && ptGameState->getPrevKeyUp(ALLEGRO_KEY_C)) {
@@ -440,7 +459,7 @@ int DialogBox::peekNextChar() const {
 	return ustrGetChar(scriptList.ustrAt(curMsgIdx), curPos);
 }
 
-void DialogBox::clear() {
+void DialogBox::cleanupUI() {
 	al_clear_to_color(al_map_rgba(0, 0, 0, 0));
 }
 
@@ -562,6 +581,23 @@ void DialogBox::drawChar() {
 	}
 }
 
+void DialogBox::drawCursor() {
+	Rect borderRc = getBorderArea();
+	// int cursorWidth = sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME_DOWN_ARROW].width;
+	int cursorHeight = sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME_DOWN_ARROW].width;
+
+	dboxSpr->setScale(1.0f, 1.0f);
+	// dboxSpr->setXY(borderRc.x + (borderRc.width / 2) + (cursorWidth / 2), 
+	// 	borderRc.y + borderRc.height - cursorHeight);
+	dboxSpr->setXY((rect.x + borderRc.width / 2), 
+		rect.y + marginTop + borderRc.height - cursorHeight / 2);
+	dboxSpr->draw(&sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME_DOWN_ARROW]);
+}
+
+bool DialogBox::isUICursorOn() const {
+	return cursorBlink;
+}
+
 // 
 // (rect.width - marginRight - paddingRight) - (marginLeft + paddingLeft + xoffset + <앞으로 출력될 문자의 너비>)
 int DialogBox::getMessageDistance(int nextChrWidth) const {
@@ -583,13 +619,14 @@ void DialogBox::show(int idx, bool blocking) {
 
 	// UI frame을 먼저 출력하고 텍스트 출력 모드인 DBOX_STATE_BUSY로 전환한다.
 	targetOrigin = ptGameState->setTargetBitmap(dboxTargetBitmap);
-	clear();
+	cleanupUI();
 	if (frameVisible) {
 		drawUIFrame();
 	}
 	ptGameState->setTargetBitmap(targetOrigin);
 	//busy = true;
 	state = DBOX_STATE_BUSY;
+	cursorBlink = false;
 }
 
 // void DialogBox::showNext(bool blocking) {
@@ -618,6 +655,10 @@ void DialogBox::setRate(int r) {
 
 int DialogBox::getRate() const {
 	return rateOrigin;
+}
+
+void DialogBox::setCursorBlinkRate(int r) {
+	cursorBlinkRate = r;
 }
 
 // UI 사이즈가 변경될 경우 UI가 출력되는 비트맵 사이즈를 변경해야 한다

@@ -272,6 +272,10 @@ ALLEGRO_BITMAP* GameState::getSystemTargetBitmap() const {
 	return systemTargetBitmap;
 }
 
+ALLEGRO_BITMAP* GameState::getDisplayBitmap() const {
+	return displayBitmap;
+}
+
 ALLEGRO_BITMAP* GameState::setNewTargetBitmap(ALLEGRO_BITMAP* bitmap) {
 	ALLEGRO_BITMAP* origin = al_get_target_bitmap();
 	al_set_target_bitmap(bitmap);
