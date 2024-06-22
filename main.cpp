@@ -256,7 +256,8 @@ int main(int argc, char* argv[])
 				npc1->update();
 				npc2->update();
 				dbox->update();
-
+				
+				// 충돌 검사
 				if (player->aabbIntersection(npc1->getBoundaryBox())) {
 					npc1->setCollision(true);
 					player->setCollision(true);
