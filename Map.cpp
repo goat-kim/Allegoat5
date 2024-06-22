@@ -20,3 +20,15 @@ bool Map::loadBGM(const char* pathname) {
 bool Map::loadBGS(const char* pathname) {
 
 }
+
+int MapStat::getId() const {
+	return id;
+}
+
+string MapStat::getLabel() const {
+	return label;
+}
+
+bool MapStat::idValid() const {
+	return valid;
+}

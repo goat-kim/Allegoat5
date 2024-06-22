@@ -34,6 +34,8 @@ public:
 	UI();
 	virtual ~UI();
 
+	int getState() const;
+
 	bool isVisible() const;
 	void setVisible(bool v);
 
@@ -98,25 +100,29 @@ public:
 
 /* 카운터 값들은 모두 프레임을 단위로 동기된다. */
 // TODO: 캐릭터 얼굴, 이름 출력
+// 여러 캐릭터의 얼굴을 염두에 둘 것 -> 얼굴 스프라이트를 DialogBox에 두는 방법 대신 위치 정보만 관리
 // TODO: 스프라이트 기반 UI 스킨을 UI 클래스로 일반화할 것
 // TODO: 대사 출력 완료 시 커서 표시
 // 편의상 프리셋을 두는 것이 좋을 듯
 class DialogBox : public UI {
 private:
 	ALLEGRO_FONT* dboxMsgFont;
-	Sprite* dboxSpr;
+	Sprite* dboxSpr;		// UI 스킨을 위한 스프라이트
 
-	int cursorBlinkRate;	// 커서의 깜빡임 속도
-	int blinkCnt;			// 경과 시간 측정용 카운터
-	bool cursorBlink;
+	int state;
+	ALLEGRO_USTR* usDisplay;
+	ALLEGRO_BITMAP* dboxTargetBitmap;
+
+	Rect faceRc;
+	bool faceVisible;
 
 	int rate;				// 대사의 출력 속도
 	int rateOrigin;			// 대사 빨리 넘김 시 원래 출력 속도 유지용도
 	int delayCnt;			// 경과 시간 측정을 위해 사용되는 카운터
 
-	int state = DBOX_STATE_CLOSED;
-	ALLEGRO_USTR* usDisplay;
-	ALLEGRO_BITMAP* dboxTargetBitmap;
+	int cursorBlinkRate;	// 커서의 깜빡임 속도
+	int blinkCnt;			// 경과 시간 측정용 카운터
+	bool cursorBlink;
 
 	int curPos;
 	int xoffset;
@@ -124,12 +130,11 @@ private:
 
 	UstrVector scriptList;
 	int curMsgIdx;
-	bool blocking;	// 대사 출력 시 게임 블로킹(일시 정지) 여부
+	bool truncated = false;
+	bool blocking;			// 대사 출력 시 게임 블로킹(일시 정지) 여부
 
 	int xKeyCount;
 	int cKeyCount;
-
-	bool truncated = false;
 
 public:
 	enum { DBOX_STATE_CLOSED = 0, DBOX_STATE_BUSY, DBOX_STATE_IDLE, DBOX_STATE_TRUNCATED, DBOX_STATE_UNKNOWN };
@@ -154,6 +159,7 @@ public:
 	void drawChar();
 	void drawCursor();
 	bool isUICursorOn() const;
+	bool isFaceVisible() const;
 	//void drawChar(int32_t code);
 	int getMessageDistance(int nextChrWidth = 0) const;
 	int peekNextChar() const;

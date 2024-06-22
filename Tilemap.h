@@ -18,7 +18,7 @@ typedef struct Tile {
 class Tileset {
 private:
 	int tileWidth, tileHeight;			// 단일 타일의 가로와 세로 길이 (픽셀 단위)
-	int tilesetWidth, tilesetHeight;	// 맵의 가로와 세로 길이 (타일 단위)
+	int tilesetWidth, tilesetHeight;	// 타일셋의 가로와 세로 길이 (타일 단위)
 	Sprite* mapspr;
 
 public:

@@ -199,10 +199,11 @@ int main(int argc, char* argv[])
 	int rateCnt = 0;
 	int rate = 3;
 	int ustrIdx = 0;
-
+	
 	DialogBox* dbox = new DialogBox();
 	dbox->loadScript("text/text2.txt");
 	dbox->loadUISprite("img/System.png");
+
 	//FF9C00
 	dbox->setUISpriteColorKey(0xff, 0x9c, 0x00);
 	dbox->setMargin(5, 5, 10, 10);
@@ -215,6 +216,11 @@ int main(int argc, char* argv[])
 	bool boundBoxVisible = false;
 
 	printf("dbox.width: %d\n", dbox->getWidth());
+
+	Sprite *goatFaceSpr = new Sprite();
+	goatFaceSpr->load("img/chr1.png");
+	goatFaceSpr->setXY(100, 100);
+	goatFaceSpr->setScale(0.07f);
 
 	// On test ========================================
 	//gameState->setCurrentGameState(GAME_STATE_INIT); // init 시점이나 스플래시 화면에 필요 데이터 메모리에 로드
@@ -477,9 +483,16 @@ int main(int argc, char* argv[])
 				/* UI 출력 */
 				// UI 출력 우선순위는 맵과 플레이어, 게임 오브젝트 다음으로
 				//dbox->drawUIArea();
-				dbox->draw();
-				if (dbox->isUICursorOn())
-					dbox->drawCursor();
+				if (dbox->getState() != DialogBox::DBOX_STATE_CLOSED) {
+					dbox->draw();
+					if (dbox->isUICursorOn())
+						dbox->drawCursor();
+
+					if (dbox->isFaceVisible()) {
+						//dbox->drawFace();
+						//goatFaceSpr->draw();
+					}
+				}
 
 				if (textAreaVisible) {
 					Rect rcText = dbox->getContentArea();
@@ -570,6 +583,7 @@ int main(int argc, char* argv[])
 
 	delete sprTitle;
 
+	delete goatFaceSpr;
 	delete dbox;
 
 	delete npc2;

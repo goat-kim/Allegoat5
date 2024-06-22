@@ -15,6 +15,7 @@ OBJS := main.o \
 TARGET = allegoat
 LIBS := allegro-5 allegro_acodec-5 allegro_audio-5 allegro_color-5 allegro_font-5 allegro_image-5 allegro_primitives-5 allegro_ttf-5
 CXXFLAGS := -Wall `pkg-config --cflags --libs $(LIBS)`
+# CXXFLAGS += -g
 
 .PHONY: all
 all: $(TARGET)

@@ -301,6 +301,9 @@ void UI::drawUIArea() {
 
 DialogBox::DialogBox() : 
 	dboxSpr(nullptr),
+	state(DBOX_STATE_CLOSED),
+	faceVisible(true),
+	faceRc(Rect(0, 0, 48, 48)),
 	cursorBlinkRate(30),
 	blinkCnt(0),
 	cursorBlink(false),
@@ -342,6 +345,10 @@ DialogBox::~DialogBox() {
 		al_destroy_bitmap(dboxTargetBitmap);
 	if (dboxSpr)
 		delete dboxSpr;
+}
+
+int DialogBox::getState() const {
+	return state;
 }
 
 bool DialogBox::loadScript(const char* pathname) {
@@ -437,13 +444,12 @@ void DialogBox::update() {
 		}
 	}
 	else if (state == DBOX_STATE_IDLE) { // 텍스트 출력이 완료된 상태
+		// 커서는 UI 비트맵이 아닌 system target bitmap에 별도로 출력되므로
+		// 여기에서는 상태값만 관리한다
 		if (blinkCnt == 0) {
 			blinkCnt = cursorBlinkRate;
 			cursorBlink = !cursorBlink;
-			printf("blink\n");
 		}
-		// if (cursorBlink)
-		// 	drawCursor();
 		blinkCnt--;
 	}
 	//else if (state == DBOX_STATE_IDLE) { // 화살표 커서 출력
@@ -550,10 +556,13 @@ void DialogBox::drawChar() {
 	GameState* ptGameState = GameState::getInstance();
 	ALLEGRO_BITMAP* targetOrigin = nullptr;
 	targetOrigin = ptGameState->setTargetBitmap(dboxTargetBitmap);
+	int chrX = marginLeft + paddingLeft + xoffset;
+	int chrY = marginTop + paddingTop + yoffset;
+	Rect contRc = getContentArea();
 	al_draw_ustr(dboxMsgFont,
 		al_map_rgb(255, 255, 255),
-		marginLeft + paddingLeft + xoffset,
-		marginTop + paddingTop + yoffset,
+		chrX,
+		chrY,
 		0,
 		usDisplay);
 	ptGameState->setTargetBitmap(targetOrigin);
@@ -567,6 +576,7 @@ void DialogBox::drawChar() {
 
 	// message disatnce: UI의 오른쪽 경계와 x커서 사이의 거리.
 	/* distance가 충분히 좁을 경우 개행 */
+	//if (contRc.x + contRc.width - chrX - chrWidth < paddingRight) {
 	if (getMessageDistance(chrWidth) < paddingRight) {
 		printf("distance: %d\n", getMessageDistance(chrWidth));
 		xoffset = 0;
@@ -598,9 +608,14 @@ bool DialogBox::isUICursorOn() const {
 	return cursorBlink;
 }
 
+bool DialogBox::isFaceVisible() const {
+	return faceVisible;
+}
+
 // 
 // (rect.width - marginRight - paddingRight) - (marginLeft + paddingLeft + xoffset + <앞으로 출력될 문자의 너비>)
 int DialogBox::getMessageDistance(int nextChrWidth) const {
+	// (UI의 컨텐츠 영역에서 오른쪽 끝 위치) - (다음 문자를 포함한 현재 문자열 위치)
 	return (rect.width - marginRight - paddingRight) - (marginLeft + paddingLeft + xoffset + nextChrWidth);
 }
 
@@ -642,10 +657,6 @@ void DialogBox::show(int idx, bool blocking) {
 
 size_t DialogBox::getScriptLength() const {
 	return scriptList.length();
-}
-
-int DialogBox::getState() const {
-	return state;
 }
 
 void DialogBox::setRate(int r) {
