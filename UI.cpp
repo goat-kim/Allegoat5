@@ -248,7 +248,7 @@ Rect UI::getContentArea() const {
 
 void UI::drawUIArea() {
 	// margin을 포함한 영역
-	al_draw_filled_rectangle(
+	al_draw_filled_rectangle( // blue
 		rect.x,
 		rect.y, 
 		rect.x + rect.width,
@@ -256,7 +256,7 @@ void UI::drawUIArea() {
 		al_map_rgba(0, 0, 128, 128)
 	);
 	// border 영역
-	al_draw_filled_rectangle(
+	al_draw_filled_rectangle( // yellow
 		rect.x + marginLeft,
 		rect.y + marginTop,
 		rect.x + rect.width - marginRight,
@@ -264,7 +264,7 @@ void UI::drawUIArea() {
 		al_map_rgba(128, 128, 0, 128)
 	);
 	// cotent 영역
-	al_draw_filled_rectangle(
+	al_draw_filled_rectangle( // red
 		rect.x + marginLeft + paddingLeft,
 		rect.y + marginTop + paddingTop,
 		rect.x + rect.width - marginRight - paddingRight,
@@ -302,6 +302,7 @@ void UI::drawUIArea() {
 DialogBox::DialogBox() : 
 	dboxSpr(nullptr),
 	state(DBOX_STATE_CLOSED),
+	faceSpr(nullptr),
 	faceVisible(true),
 	faceRc(Rect(0, 0, 48, 48)),
 	cursorBlinkRate(30),
@@ -345,6 +346,8 @@ DialogBox::~DialogBox() {
 		al_destroy_bitmap(dboxTargetBitmap);
 	if (dboxSpr)
 		delete dboxSpr;
+	if (faceSpr)
+		delete faceSpr;
 }
 
 int DialogBox::getState() const {
@@ -358,6 +361,31 @@ bool DialogBox::loadScript(const char* pathname) {
 bool DialogBox::loadUISprite(const char* pathname) {
 	dboxSpr = new Sprite();
 	return dboxSpr->load(pathname);
+}
+
+bool DialogBox::loadFaceSprite(const char *pathname) {
+	faceSpr = new Sprite();
+	return faceSpr->load(pathname);
+}
+
+void DialogBox::setFaceLocationAlign(int flag) {
+	if (!faceSpr)
+		return;
+	int faceWidth = faceSpr->getWidth();
+	int faceHeight = faceSpr->getHeight();
+	switch (flag) {
+	case DBOX_FACE_LEFT:
+		break;
+	case DBOX_FACE_RIGHT:
+		break;
+	case DBOX_FACE_LEFT_TOP:
+		break;
+	default:
+	case DBOX_FACE_RIGHT_TOP:
+		faceSpr->setXY(rect.x + rect.width - faceWidth - marginRight - marginLeft - paddingRight - paddingLeft - 20,
+			rect.y - faceHeight + marginTop);
+		break;
+	}
 }
 
 void DialogBox::setUISpriteColorKey(int r, int g, int b) {
@@ -604,12 +632,20 @@ void DialogBox::drawCursor() {
 	dboxSpr->draw(&sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME_DOWN_ARROW]);
 }
 
+void DialogBox::drawFace() {
+	faceSpr->draw();
+}
+
 bool DialogBox::isUICursorOn() const {
 	return cursorBlink;
 }
 
 bool DialogBox::isFaceVisible() const {
 	return faceVisible;
+}
+
+void DialogBox::setFaceVisible(bool v) {
+	faceVisible = v;
 }
 
 // 

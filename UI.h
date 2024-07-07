@@ -113,6 +113,7 @@ private:
 	ALLEGRO_USTR* usDisplay;
 	ALLEGRO_BITMAP* dboxTargetBitmap;
 
+	Sprite *faceSpr;
 	Rect faceRc;
 	bool faceVisible;
 
@@ -138,6 +139,7 @@ private:
 
 public:
 	enum { DBOX_STATE_CLOSED = 0, DBOX_STATE_BUSY, DBOX_STATE_IDLE, DBOX_STATE_TRUNCATED, DBOX_STATE_UNKNOWN };
+	enum { DBOX_FACE_LEFT = 0, DBOX_FACE_RIGHT, DBOX_FACE_LEFT_TOP, DBOX_FACE_RIGHT_TOP };
 	// message
 	// cursor
 	// current cursor: 현재 문자가 출력될 위치
@@ -151,6 +153,7 @@ public:
 
 	bool loadScript(const char* pathname);
 	bool loadUISprite(const char* pathname);
+	bool loadFaceSprite(const char* pathname);
 	void setUISpriteColorKey(int r, int g, int b);
 	void update();
 	void draw();
@@ -158,8 +161,10 @@ public:
 	void drawUIFrame();
 	void drawChar();
 	void drawCursor();
+	void drawFace();
 	bool isUICursorOn() const;
 	bool isFaceVisible() const;
+	void setFaceVisible(bool v);
 	//void drawChar(int32_t code);
 	int getMessageDistance(int nextChrWidth = 0) const;
 	int peekNextChar() const;
@@ -176,6 +181,8 @@ public:
 	int getRate() const;
 	void setRate(int r);
 	void setCursorBlinkRate(int r);
+
+	void setFaceLocationAlign(int flag = DBOX_FACE_RIGHT_TOP);
 
 	void reallocUITargetBitmap();
 };

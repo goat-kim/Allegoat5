@@ -203,6 +203,9 @@ int main(int argc, char* argv[])
 	DialogBox* dbox = new DialogBox();
 	dbox->loadScript("text/text2.txt");
 	dbox->loadUISprite("img/System.png");
+	dbox->loadFaceSprite("img/dog-face.png");
+	dbox->setFaceLocationAlign();
+	dbox->setFaceVisible(true);
 
 	//FF9C00
 	dbox->setUISpriteColorKey(0xff, 0x9c, 0x00);
@@ -483,14 +486,16 @@ int main(int argc, char* argv[])
 
 				/* UI 출력 */
 				// UI 출력 우선순위는 맵과 플레이어, 게임 오브젝트 다음으로
-				//dbox->drawUIArea();
+				if (boundBoxVisible) {
+					dbox->drawUIArea();
+				}
 				if (dbox->getState() != DialogBox::DBOX_STATE_CLOSED) {
 					dbox->draw();
 					if (dbox->isUICursorOn())
 						dbox->drawCursor();
 
 					if (dbox->isFaceVisible()) {
-						//dbox->drawFace();
+						dbox->drawFace();
 						//goatFaceSpr->draw();
 					}
 				}
