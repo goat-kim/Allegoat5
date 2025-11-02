@@ -13,13 +13,10 @@ private:
 
 	int cKeyCount;
 
-	bool collision;
-
 public:
 	Player();
 	~Player();
 	void update();
 	float getSpeed() const;
 	void setSpeed(float s);
-	void setCollision(bool c); // on test
 };

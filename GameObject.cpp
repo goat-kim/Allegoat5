@@ -6,6 +6,8 @@
 #include <cstdio>
 #include <cstring>
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_image.h>
+//#include <allegro5/allegro.h>
 
 GameObject::GameObject()
 	: sprAni(nullptr), ptSpr(nullptr),
@@ -13,7 +15,8 @@ GameObject::GameObject()
 	x(0.0f), y(0.0f), scrX(0.0f), scrY(0.0f), vx(0.0f), vy(0.0f),
 	scrollMode(true),
 	scrWidth(0), scrHeight(0),
-	bndBox(), bndBoxVisible(false)
+	bndBox(), bndBoxVisible(false), bndBoxColorG(255),
+	colEnable(true)
 {
 	memset(stopIdx, 0, sizeof(int) * NUM_OF_DIRECT);
 	printf("GameObject()\n");
@@ -80,6 +83,26 @@ void GameObject::update() {
 	prevX = x; prevY = y;
 	prevScrX = scrX; prevScrY = scrY;
 	ptSpr->setXY(scrX, scrY);
+
+	// if (colEnable) {
+	// 	aabbIntersection(); // 외부에서 어떻게 전달받지?
+	// }
+	updateBoundaryBox();
+}
+
+void GameObject::updateBoundaryBox() {
+	float uw = (float)sprAni->getUnitWidth() * ptSpr->getScaleX();
+	float uh = (float)sprAni->getUnitHeight() * ptSpr->getScaleY();
+	float cx = ptSpr->getCenterX();
+	float cy = ptSpr->getCenterY();
+	bndBox.x = ptSpr->getX() - (int)(cx * uw);
+	bndBox.y = ptSpr->getY() - (int)(cy * uh);
+	bndBox.width = (int)(sprAni->getUnitWidth() * ptSpr->getScaleX());
+	bndBox.height = (int)(sprAni->getUnitHeight() * ptSpr->getScaleY());
+}
+
+const Rect& GameObject::getBoundaryBox() const {
+	return bndBox;
 }
 
 void GameObject::customUpdate() { }
@@ -90,8 +113,10 @@ void GameObject::draw() {
 
 void GameObject::drawBoundaryBox() {
 	const Rect& rc = getBoundaryBox();
+	/* al_draw_rectangle(rc.x, rc.y, rc.x + rc.width, rc.y + rc.height,
+		al_map_rgb(255, 255, 0), 1.0f); */
 	al_draw_rectangle(rc.x, rc.y, rc.x + rc.width, rc.y + rc.height,
-		al_map_rgb(255, 255, 0), 1.0f);
+		al_map_rgb(255, bndBoxColorG, 0), 1.0f);
 }
 
 SpriteAnimation* GameObject::getSpriteAnimation() const {
@@ -170,19 +195,6 @@ Direction GameObject::getDirect() const {
 	return dir;
 }
 
-const Rect& GameObject::getBoundaryBox() {
-	float uw = (float)sprAni->getUnitWidth() * ptSpr->getScaleX();
-	float uh = (float)sprAni->getUnitHeight() * ptSpr->getScaleY();
-	float cx = ptSpr->getCenterX();
-	float cy = ptSpr->getCenterY();
-	bndBox.x = ptSpr->getX() - (int)(cx * uw);
-	bndBox.y = ptSpr->getY() - (int)(cy * uh);
-	bndBox.width = (int)(sprAni->getUnitWidth() * ptSpr->getScaleX());
-	bndBox.height = (int)(sprAni->getUnitHeight() * ptSpr->getScaleY());
-
-	return bndBox;
-}
-
 bool GameObject::isScrollMode() const {
 	return scrollMode;
 }
@@ -222,4 +234,12 @@ bool GameObject::aabbIntersection(const Rect& rc) {
 	if (bndBox.y + bndBox.height < rc.y || rc.y + rc.height < bndBox.y)
 		return false;
 	return true;
+}
+
+bool GameObject::isCollisionEnabled() const {
+	return colEnable;
+}
+
+void GameObject::setCollisionEnable(bool c) {
+	colEnable = c;
 }

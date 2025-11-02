@@ -40,6 +40,10 @@ protected:
 
 	Rect bndBox;				// 경계 상자 (충돌처리 및 디버깅 용)
 	bool bndBoxVisible;			// 경계 상자 시각화 여부
+	//ALLEGRO_COLOR bndBoxColor;
+	int bndBoxColorG;
+
+	bool colEnable;
 
 	int stopIdx[NUM_OF_DIRECT];	// 정지 시 인덱스
 
@@ -67,7 +71,10 @@ public:
 	float getScaleX() const;
 	float getScaleY() const;
 	Direction getDirect() const;
-	const Rect& getBoundaryBox();
+
+	void updateBoundaryBox();
+	const Rect& getBoundaryBox() const;
+
 
 	void setScrollMode(bool s);
 	void setBoundaryBoxVisible(bool v);
@@ -83,4 +90,7 @@ public:
 	State getState() const;	// State형을 GameObjectState형으로 이름 변경?
 	void setState(int s);
 	bool aabbIntersection(const Rect& rc);
+
+	bool isCollisionEnabled() const;
+	void setCollisionEnable(bool c);
 };

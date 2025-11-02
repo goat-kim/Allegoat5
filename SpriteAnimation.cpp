@@ -75,6 +75,7 @@ bool SpriteAnimation::createAutomatedRegionList(int row, int col) {
 	for (int i = 0; i < 4; i++) {
 		insertAniListEntry(3, aniSection[i]); // 한 엔트리 당 3개 인덱스
 	}
+	aniList.shrink_to_fit();
 
 	printf("SpriteAnimation::createAutomatedRegionList(): '%d * %d' region list created and '%zu' aniList entry inserted\n", row, col, aniList.size());
 	for (int i = 0; i < 4; i++) {

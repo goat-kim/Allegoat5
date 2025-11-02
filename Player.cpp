@@ -9,7 +9,7 @@
 Player::Player() : GameObject(), 
 	willUpdateScrollerX(false), willUpdateScrollerY(false),
 	speed(DEFAULT_SPEED),
-	cKeyCount(-1), collision(false)
+	cKeyCount(-1)
 {
 	printf("Player()\n");
 }
@@ -26,12 +26,6 @@ bool Player::isMoveKeyPressed() const {
 
 void Player::update() {
 	GameState* gameState = GameState::getInstance();
-
-	if (collision) {
-		this->setState(STATE_STOP);
-		sprAni->setCurrentRegionIdx(this->stopIdx[dir]);
-		return;
-	}
 
 	if (gameState->isKeyDown(ALLEGRO_KEY_C)) {
 		if (cKeyCount == -1) {
@@ -168,6 +162,8 @@ void Player::update() {
 	}
 
 	ptSpr->setXY(scrX, scrY);
+
+	updateBoundaryBox();
 }
 
 float Player::getSpeed() const {
@@ -176,8 +172,4 @@ float Player::getSpeed() const {
 
 void Player::setSpeed(float s) {
 	speed = s;
-}
-
-void Player::setCollision(bool c) {
-	collision = c;
 }

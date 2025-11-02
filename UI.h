@@ -170,9 +170,6 @@ public:
 	int peekNextChar() const;
 
 	void show(int idx, bool blocking = false);
-	//void showNext(bool blocking = false);
-
-	//void setMessageRate(int r);
 
 	size_t getScriptLength() const;
 

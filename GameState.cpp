@@ -17,6 +17,7 @@ GameState::GameState()
 	oldDisplayFlags(0), newDisplayFlags(0), fullscreen(false),
 	scroller(nullptr),
 	ptPlayer(nullptr),
+	colDetect(true),
 	mapWidth(TARGET_BITMAP_WIDTH), mapHeight(TARGET_BITMAP_HEIGHT),
 	curGameState(GAME_STATE_INIT)
 {
@@ -55,6 +56,7 @@ bool GameState::loadSystemFonts() {
 		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SANS);
 		return false;
 	}
+	/*
 	if (!(sans14 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SANS, 14, ALLEGRO_TTF_MONOCHROME))) {
 		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SANS);
 		return false;
@@ -83,7 +85,7 @@ bool GameState::loadSystemFonts() {
 	if (!(serif18 = al_load_ttf_font(GAME_STATE_SYSTEM_FONT_PATH_SERIF, 18, ALLEGRO_TTF_MONOCHROME))) {
 		fprintf(stderr, "E: failed to load ttf file %s\n", GAME_STATE_SYSTEM_FONT_PATH_SERIF);
 		return false;
-	}
+	}*/
 
 	return true;
 }
@@ -435,4 +437,12 @@ void GameState::toggleFullscreen() {
 
 void GameState::screenshot(const char *path) {
 	al_save_bitmap(path, systemTargetBitmap);
+}
+
+bool GameState::isCollisionDectionEnabled() const {
+	return colDetect;
+}
+
+void GameState::setCollisionDetection(bool c) {
+	colDetect = c;
 }

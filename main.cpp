@@ -237,6 +237,7 @@ int main(int argc, char* argv[])
 	// Test Variables =================================
 	int uiDockStateIdx = 0;
 	int retKeyCount = -1;
+	int pKeyCount = -1;
 	const int BLINK_RATE = 40;
 	int blinkCnt = BLINK_RATE;
 	bool drawEn = true;
@@ -260,15 +261,14 @@ int main(int argc, char* argv[])
 				npc2->update();
 				dbox->update();
 				
-				// 충돌 검사
-				if (player->aabbIntersection(npc1->getBoundaryBox())) {
-					npc1->setCollision(true);
-					player->setCollision(true);
-				}
-				else {
-					npc1->setCollision(false);
-					player->setCollision(false);
-				}
+				// if (player->aabbIntersection(npc1->getBoundaryBox())) {
+				// 	npc1->setCollision(true);
+				// 	player->setCollision(true);
+				// }
+				// else {
+				// 	npc1->setCollision(false);
+				// 	player->setCollision(false);
+				// }
 
 				vp = ptScroll->getViewPort();
 				sprintf(buf, "position: [%f, %f]", player->getX(), player->getY());
@@ -309,6 +309,19 @@ int main(int argc, char* argv[])
 				}
 			}
 
+			// else if (curGameState == GAME_STATE_PAUSE) {
+			// 	// 매 게임 루프마다 업데이트
+			// 	if (gameState->isKeyDown(ALLEGRO_KEY_P)) {
+			// 		if (pKeyCount == -1)
+			// 			pKeyCount = 1;
+			// 		else if (pKeyCount == 0) {
+			// 			printf("재개! (Press 'P' to pause the game)")
+			// 			gameState->setCurrentGameState(GAME_STATE_RUNNING);
+			// 		}
+			// 		pKeyCount--;
+			// 	}
+			// }
+
 			if (gameState->isKeyDown(ALLEGRO_KEY_ESCAPE))
 				mainLoop = false;
 			break;
@@ -329,18 +342,22 @@ int main(int argc, char* argv[])
 			else if (keycode == ALLEGRO_KEY_BACKSPACE) {
 				//Sound::stopAll();
 			}
+			// F1: set display size to 640x480
 			else if (keycode == ALLEGRO_KEY_F1) {
 				gameState->setDisplaySize(640, 480);
 				printf("Set display size to 640x480\n");
 			}
+			// F2: set display size to 320x240
 			else if (keycode == ALLEGRO_KEY_F2) {
 				gameState->setDisplaySize(320, 240);
 				printf("Set display size to 320x240\n");
 			}
+			// F3: set display size to 1280x1024
 			else if (keycode == ALLEGRO_KEY_F3) {
 				gameState->setDisplaySize(1280, 1024);
 				printf("Set display size to 1280x1024\n");
 			}
+			// F4: toggle fullscreen mode
 			else if (keycode == ALLEGRO_KEY_F4) {
 				gameState->toggleFullscreen();
 				if (gameState->isFullscreen())
@@ -348,6 +365,7 @@ int main(int argc, char* argv[])
 				else
 					printf("Fullscreen off\n");
 			}
+			// F5: save a screenshot
 			else if (keycode == ALLEGRO_KEY_F5) {
 				char pathname[50];
 				sprintf(pathname, "screenshots/screenshot_%s.png", getCurrentTimestamp());
@@ -355,36 +373,61 @@ int main(int argc, char* argv[])
 				printf("screenshot is saved in %s\n", pathname);
 				
 			}
+			// F6: display experimental mode toggle
 			else if (keycode == ALLEGRO_KEY_F6) {
 				onDisplayTest = !onDisplayTest;
+				printf("Display experimental mode %d", onDisplayTest);
 			}
-			// F7: DialogBox Test
+			// F7: dialog box test
 			else if (keycode == ALLEGRO_KEY_F7) {
 				dbox->show(0);
 			}
-			// F8: Draw Text Area (=DialogBox's Content Area)
+			// F8: toggle dialog box UI skin
 			else if (keycode == ALLEGRO_KEY_F8) {
+				dbox->setFrameVisible(!dbox->isFrameVisible());
+				printf("DialogBox skin %d", dbox->isFrameVisible());
+			}
+			// F9: toggle character face
+			else if (keycode == ALLEGRO_KEY_F9) {
+				dbox->setFaceVisible(!dbox->isFaceVisible());
+				printf("Character face %d", dbox->isFaceVisible());
+			}
+			// F10: toggle dialog message rate (5/10)
+			else if (keycode == ALLEGRO_KEY_F10) {
+				if (dbox->getRate() == 10) {
+					dbox->setRate(5);
+				}
+				else {
+					dbox->setRate(10);
+				}
+				printf("Set message rate to %d\n", dbox->getRate());
+			}
+			// F11: toggle textAreaVisible (=DialogBox's Content Area)
+			else if (keycode == ALLEGRO_KEY_F11) {
 				textAreaVisible = !textAreaVisible;
 			}
-			else if (keycode == ALLEGRO_KEY_F9) {
-				dbox->setRate(5);
-				printf("Set message rate to 5\n");
-			}
-			else if (keycode == ALLEGRO_KEY_F10) {
-				dbox->setRate(10);
-				printf("Set message rate to 10\n");
-			}
-			else if (keycode == ALLEGRO_KEY_F11) {
-				dbox->setRate(0);
-				printf("Set message rate to 0\n");
-			}
+			// F12: toggle boundary box visible
 			else if (keycode == ALLEGRO_KEY_F12) {
 				boundBoxVisible = !boundBoxVisible;
+				player->setBoundaryBoxVisible(boundBoxVisible);
+				npc1->setBoundaryBoxVisible(boundBoxVisible);
+				npc2->setBoundaryBoxVisible(boundBoxVisible);
 			}
 			else if (keycode == ALLEGRO_KEY_0) {
 				ustrDisp = true;
 				ustrIdx = 0;
 				rateCnt = 0;
+			}
+			// /* Pause/Resume Test */
+			else if (keycode == ALLEGRO_KEY_P) {
+				if (curGameState == GAME_STATE_RUNNING) {
+					printf("멈춰! (Press 'P' to resume the game)\n");
+					gameState->setCurrentGameState(GAME_STATE_PAUSE);
+				}
+				else if (curGameState == GAME_STATE_PAUSE) {
+					printf("재개! (Press 'P' to pause the game)\n");
+					gameState->setCurrentGameState(GAME_STATE_RUNNING);
+				}
 			}
 			/* UI Frame Test */
 			else if (keycode == ALLEGRO_KEY_Q) {
@@ -476,11 +519,13 @@ int main(int argc, char* argv[])
 				npc1->draw();
 				npc2->draw();
 
+				/* drawBoundaryBox() 전체 GameObject::draw() 호출 이후로 우선순위 */
 				if (boundBoxVisible) {
 					player->drawBoundaryBox();
 					npc1->drawBoundaryBox();
 					npc2->drawBoundaryBox();
 				}
+
 				//sprintf(buf, "[%f, %f]", spr1->getX(), spr1->getY());
 				//al_draw_text(gameState->getBuiltinFont(), al_map_rgb(255, 255, 255), 10.0f, 10.0f, ALLEGRO_ALIGN_LEFT, buf);
 
