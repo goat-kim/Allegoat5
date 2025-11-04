@@ -309,19 +309,6 @@ int main(int argc, char* argv[])
 				}
 			}
 
-			// else if (curGameState == GAME_STATE_PAUSE) {
-			// 	// 매 게임 루프마다 업데이트
-			// 	if (gameState->isKeyDown(ALLEGRO_KEY_P)) {
-			// 		if (pKeyCount == -1)
-			// 			pKeyCount = 1;
-			// 		else if (pKeyCount == 0) {
-			// 			printf("재개! (Press 'P' to pause the game)")
-			// 			gameState->setCurrentGameState(GAME_STATE_RUNNING);
-			// 		}
-			// 		pKeyCount--;
-			// 	}
-			// }
-
 			if (gameState->isKeyDown(ALLEGRO_KEY_ESCAPE))
 				mainLoop = false;
 			break;
@@ -343,19 +330,37 @@ int main(int argc, char* argv[])
 				//Sound::stopAll();
 			}
 			// F1: set display size to 640x480
+			// LSHIFT+F1: TODO
 			else if (keycode == ALLEGRO_KEY_F1) {
-				gameState->setDisplaySize(640, 480);
-				printf("Set display size to 640x480\n");
+				if (gameState->isKeyDown(ALLEGRO_KEY_LSHIFT)) {
+					printf("LSHIFT+F1\n");
+				}
+				else {
+					gameState->setDisplaySize(640, 480);
+					printf("Set display size to 640x480\n");
+				}
 			}
 			// F2: set display size to 320x240
+			// LSHIFT+F2: TODO
 			else if (keycode == ALLEGRO_KEY_F2) {
-				gameState->setDisplaySize(320, 240);
-				printf("Set display size to 320x240\n");
+				if (gameState->isKeyDown(ALLEGRO_KEY_LSHIFT)) {
+					printf("LSHIFT+F2\n");
+				}
+				else {
+					gameState->setDisplaySize(320, 240);
+					printf("Set display size to 320x240\n");
+				}
 			}
 			// F3: set display size to 1280x1024
+			// LSHIFT+F3: TODO
 			else if (keycode == ALLEGRO_KEY_F3) {
-				gameState->setDisplaySize(1280, 1024);
-				printf("Set display size to 1280x1024\n");
+				if (gameState->isKeyDown(ALLEGRO_KEY_LSHIFT)) {
+					printf("LSHIFT+F3\n");
+				}
+				else {
+					gameState->setDisplaySize(1280, 1024);
+					printf("Set display size to 1280x1024\n");
+				}
 			}
 			// F4: toggle fullscreen mode
 			else if (keycode == ALLEGRO_KEY_F4) {
@@ -429,7 +434,7 @@ int main(int argc, char* argv[])
 					gameState->setCurrentGameState(GAME_STATE_RUNNING);
 				}
 			}
-			/* UI Frame Test */
+			/* UI Mode Test */
 			else if (keycode == ALLEGRO_KEY_Q) {
 				uiDockStateIdx--;
 			}
