@@ -13,9 +13,10 @@ GameObject::GameObject()
 	: sprAni(nullptr), ptSpr(nullptr),
 	dir(Direction::DIRECT_DOWN), state(State::STATE_STOP),
 	x(0.0f), y(0.0f), scrX(0.0f), scrY(0.0f), vx(0.0f), vy(0.0f),
-	scrollMode(true),
+	scrollMode(false),
 	scrWidth(0), scrHeight(0),
-	bndBox(), bndBoxVisible(false), bndBoxColorG(255),
+	bndBox(), bndBoxVisible(false), 
+	bndBoxColorR(255), bndBoxColorG(255), bndBoxColorB(0),
 	colEnable(true)
 {
 	memset(stopIdx, 0, sizeof(int) * NUM_OF_DIRECT);
@@ -87,36 +88,13 @@ void GameObject::update() {
 	// if (colEnable) {
 	// 	aabbIntersection(); // 외부에서 어떻게 전달받지?
 	// }
-	updateBoundaryBox();
-}
-
-void GameObject::updateBoundaryBox() {
-	float uw = (float)sprAni->getUnitWidth() * ptSpr->getScaleX();
-	float uh = (float)sprAni->getUnitHeight() * ptSpr->getScaleY();
-	float cx = ptSpr->getCenterX();
-	float cy = ptSpr->getCenterY();
-	bndBox.x = ptSpr->getX() - (int)(cx * uw);
-	bndBox.y = ptSpr->getY() - (int)(cy * uh);
-	bndBox.width = (int)(sprAni->getUnitWidth() * ptSpr->getScaleX());
-	bndBox.height = (int)(sprAni->getUnitHeight() * ptSpr->getScaleY());
-}
-
-const Rect& GameObject::getBoundaryBox() const {
-	return bndBox;
+	//updateBoundaryBox();
 }
 
 void GameObject::customUpdate() { }
 
 void GameObject::draw() {
 	sprAni->draw();
-}
-
-void GameObject::drawBoundaryBox() {
-	const Rect& rc = getBoundaryBox();
-	/* al_draw_rectangle(rc.x, rc.y, rc.x + rc.width, rc.y + rc.height,
-		al_map_rgb(255, 255, 0), 1.0f); */
-	al_draw_rectangle(rc.x, rc.y, rc.x + rc.width, rc.y + rc.height,
-		al_map_rgb(255, bndBoxColorG, 0), 1.0f);
 }
 
 SpriteAnimation* GameObject::getSpriteAnimation() const {
@@ -203,14 +181,6 @@ void GameObject::setScrollMode(bool s) {
 	scrollMode = s;
 }
 
-void GameObject::setBoundaryBoxVisible(bool v) {
-	bndBoxVisible = v;
-}
-
-bool GameObject::isBoundaryBoxVisible() const {
-	return bndBoxVisible;
-}
-
 void GameObject::setDirect(int dir) {
 	this->dir = (Direction)dir;
 }
@@ -225,8 +195,46 @@ void GameObject::setState(int s) {
 	state = (State)s;
 }
 
+void GameObject::updateBoundaryBox() {
+	float uw = (float)sprAni->getUnitWidth() * ptSpr->getScaleX();
+	float uh = (float)sprAni->getUnitHeight() * ptSpr->getScaleY();
+	float cx = ptSpr->getCenterX();
+	float cy = ptSpr->getCenterY();
+	bndBox.x = ptSpr->getX() - (int)(cx * uw);
+	bndBox.y = ptSpr->getY() - (int)(cy * uh);
+	bndBox.width = (int)(sprAni->getUnitWidth() * ptSpr->getScaleX());
+	bndBox.height = (int)(sprAni->getUnitHeight() * ptSpr->getScaleY());
+}
+
+const Rect& GameObject::getBoundaryBox() const {
+	return bndBox;
+}
+
+void GameObject::setBoundaryBoxVisible(bool v) {
+	bndBoxVisible = v;
+}
+
+bool GameObject::isBoundaryBoxVisible() const {
+	return bndBoxVisible;
+}
+
+void GameObject::setBoundaryBoxColor(int r, int g, int b) {
+	bndBoxColorR = r;
+	bndBoxColorG = g;
+	bndBoxColorB = b;
+}
+
+void GameObject::drawBoundaryBox() {
+	const Rect& rc = getBoundaryBox();
+	/* al_draw_rectangle(rc.x, rc.y, rc.x + rc.width, rc.y + rc.height,
+		al_map_rgb(255, 255, 0), 1.0f); */
+	al_draw_rectangle(rc.x, rc.y, rc.x + rc.width, rc.y + rc.height,
+		al_map_rgb(bndBoxColorR, bndBoxColorG, bndBoxColorB), 1.0f);
+}
+
 bool GameObject::aabbIntersection(const Rect& rc) {
-	getBoundaryBox();
+	//getBoundaryBox();
+
 	// 대상 오브젝트가 오른쪽에 떨어져 있거나 왼쪽에 있음)
 	if (bndBox.x + bndBox.width < rc.x || rc.x + rc.width < bndBox.x)
 		return false;

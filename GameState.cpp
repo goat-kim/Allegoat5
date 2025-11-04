@@ -17,7 +17,7 @@ GameState::GameState()
 	oldDisplayFlags(0), newDisplayFlags(0), fullscreen(false),
 	scroller(nullptr),
 	ptPlayer(nullptr),
-	colDetect(true),
+	colEnable(true),
 	mapWidth(TARGET_BITMAP_WIDTH), mapHeight(TARGET_BITMAP_HEIGHT),
 	curGameState(GAME_STATE_INIT)
 {
@@ -439,10 +439,9 @@ void GameState::screenshot(const char *path) {
 	al_save_bitmap(path, systemTargetBitmap);
 }
 
-bool GameState::isCollisionDectionEnabled() const {
-	return colDetect;
+bool GameState::isCollisionEnabled() const {
+	return colEnable;
 }
-
-void GameState::setCollisionDetection(bool c) {
-	colDetect = c;
+void GameState::setCollisionEnable(bool c) {
+	colEnable = c;
 }

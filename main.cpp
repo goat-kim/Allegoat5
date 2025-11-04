@@ -19,6 +19,8 @@
 #include "Tilemap.h"
 #include "UI.h"
 
+#define N_NPCS 50
+
 bool allegroInit() {
 	printf("allegroInit()\n");
 
@@ -73,14 +75,14 @@ bool loadResources(void) {
 	return true;
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 	if (!allegroInit()) {
 		fprintf(stderr, "Failed to initialize allegro system: program aborted\n");
 		return -1;
 	}
 
-	GameState* gameState = GameState::getInstance();
+	GameState *gameState = GameState::getInstance();
 	//if (!gameState->init()) {
 	if (!gameState->init(640, 480)) {
 		fprintf(stderr, "Failed to initialize game state: program aborted\n");
@@ -90,16 +92,16 @@ int main(int argc, char* argv[])
 	//gameState->setDisplayFlag(ALLEGRO_FRAMELESS);
 	gameState->setGameTitle("Goat Simulator");
 
-	const char* chrFilename = "img/chr1.png";
-	const char* bgFilename = "img/bg1.png";
-	const char* splashFilename = "img/splash-white.png";
+	const char *chrFilename = "img/chr1.png";
+	const char *bgFilename = "img/bg1.png";
+	const char *splashFilename = "img/splash-white.png";
 	
 	bool mainLoop = true;
 	bool redraw = false;
 
 	ALLEGRO_EVENT ev;
 
-	ALLEGRO_FONT* font1 = al_load_ttf_font("font/consola.ttf", 12, 0);
+	ALLEGRO_FONT *font1 = al_load_ttf_font("font/consola.ttf", 12, 0);
 	char buf[256];		//
 	char vpLog[256];	// current view port
 	char vxyLog[256];	// current vx, vy
@@ -111,17 +113,18 @@ int main(int argc, char* argv[])
 	Sprite *sprSplashScreen = new Sprite();
 	sprSplashScreen->load(splashFilename);
 
-	Sprite* sprBG1 = new Sprite();
+	Sprite *sprBG1 = new Sprite();
 	float bgScale = 1.0f;
 	sprBG1->load(bgFilename);
 	sprBG1->setScale(bgScale);
 
-	Player* player = new Player();
+	Player *player = new Player();
 	if (!player->init("img/Animal.png")) {
 		fprintf(stderr, "could not initialize object 'player'\n");
 		return -1;
 	}
-
+	
+	player->setScrollMode(true);
 	//player->setScale(5.0f);
 	player->setColorKey(0x20, 0x9c, 0x00);
 	player->setAnimationSpeed(ANIM_NORMAL);
@@ -132,29 +135,42 @@ int main(int argc, char* argv[])
 	//player->setScrollMode(false);
 	//player->setXY(gameState->getDisplayWidth() / 2, gameState->getDisplayHeight() / 2);
 
-	Npc1* npc1 = new Npc1();
+	Npc1 *npc1 = new Npc1();
 	if (!npc1->init("img/Actor2.png")) {
 		fprintf(stderr, "could not initialize object 'npc1'\n");
 		return -1;
 	}
-	npc1->setScrollMode(false);
 	//npc1->setScale(5.0f);
 	npc1->setColorKey(0x20, 0x9c, 0x00);
 	npc1->setAnimationSpeed(ANIM_NORMAL);
 	npc1->setXY(200, 200);
 	printf("npc1.x=%f, npc1.y=%f\n", npc1->getX(), npc1->getY());
 
-	GameObject* npc2 = new GameObject();
+	GameObject *npc2 = new GameObject();
 	if (!npc2->init("img/Actor2.png")) {
 		fprintf(stderr, "could not initialize object 'npc2'\n");
 		return -1;
 	}
-	npc2->setScrollMode(false);
-	npc2->setScale(3.0f);
+	npc2->setScaleY(1.5f);
 	npc2->setColorKey(0x20, 0x9c, 0x00);
 	npc2->setAnimationSpeed(ANIM_NORMAL);
 	npc2->setXY(500, 500);
 	npc2->setDirect(DIRECT_RIGHT);
+
+	/* NPC generation test */
+	GameObject *npcs[N_NPCS];
+
+	for (int i = 0; i < N_NPCS; i++) {
+		npcs[i] = new GameObject();
+		if (!npcs[i]->init("img/Actor1.png")) {
+			fprintf(stderr, "could not initialize object 'npcs[%d]\n", i);
+			return -1;
+		}
+		npcs[i]->setColorKey(0x20, 0x9c, 0x00);
+		npcs[i]->setAnimationSpeed(ANIM_NORMAL); // 기본값이 ANIM_NORMAL임
+		npcs[i]->setXY(400 + i * 30, 600);
+		npcs[i]->setDirect(DIRECT_LEFT);
+	}
 
 
 	gameState->setCurrentPlayer(player);
@@ -259,16 +275,60 @@ int main(int argc, char* argv[])
 				player->update();
 				npc1->update();
 				npc2->update();
+
+				for (int i = 0; i < N_NPCS; i++)
+					npcs[i]->update();
+
 				dbox->update();
 				
-				// if (player->aabbIntersection(npc1->getBoundaryBox())) {
-				// 	npc1->setCollision(true);
-				// 	player->setCollision(true);
-				// }
-				// else {
-				// 	npc1->setCollision(false);
-				// 	player->setCollision(false);
-				// }
+				/* 충돌 처리*/
+				// 전역 충돌 검사가 활성일 때만 처리
+				if (gameState->isCollisionEnabled()) {
+					// boundary box update
+					player->updateBoundaryBox();
+					npc1->updateBoundaryBox();
+					npc2->updateBoundaryBox();
+
+					// collision detection
+					bool colPlayer = false;
+					bool colNpc1 = player->aabbIntersection(npc1->getBoundaryBox());
+					bool colNpc2 = player->aabbIntersection(npc2->getBoundaryBox());
+
+					if (colNpc1) {
+						colPlayer = true;
+						npc1->setBoundaryBoxColor(255, 0, 0);
+					}
+					else {
+						npc1->setBoundaryBoxColor(255, 255, 0);
+					}
+
+					if (colNpc2) {
+						colPlayer = true;
+						npc2->setBoundaryBoxColor(255, 0, 0);
+					}
+					else {
+						npc2->setBoundaryBoxColor(255, 255, 0);
+					}
+
+					bool colNpcs[N_NPCS];
+					for (int i = 0; i < N_NPCS; i++) {
+						npcs[i]->updateBoundaryBox();
+						colNpcs[i] = player->aabbIntersection(npcs[i]->getBoundaryBox());
+
+						if (colNpcs[i]) {
+							colPlayer = true;
+							npcs[i]->setBoundaryBoxColor(255, 0, 0);
+						}
+						else {
+							npcs[i]->setBoundaryBoxColor(255, 255, 0);
+						}
+					}
+
+					if (colPlayer)
+						player->setBoundaryBoxColor(255, 0, 0);
+					else
+						player->setBoundaryBoxColor(255, 255, 0);
+				}
 
 				vp = ptScroll->getViewPort();
 				sprintf(buf, "position: [%f, %f]", player->getX(), player->getY());
@@ -333,7 +393,8 @@ int main(int argc, char* argv[])
 			// LSHIFT+F1: TODO
 			else if (keycode == ALLEGRO_KEY_F1) {
 				if (gameState->isKeyDown(ALLEGRO_KEY_LSHIFT)) {
-					printf("LSHIFT+F1\n");
+					gameState->setCollisionEnable(!gameState->isCollisionEnabled());
+					printf("Global collision detection is enabled: %d\n", gameState->isCollisionEnabled());
 				}
 				else {
 					gameState->setDisplaySize(640, 480);
@@ -381,7 +442,7 @@ int main(int argc, char* argv[])
 			// F6: display experimental mode toggle
 			else if (keycode == ALLEGRO_KEY_F6) {
 				onDisplayTest = !onDisplayTest;
-				printf("Display experimental mode %d", onDisplayTest);
+				printf("Display experimental mode %d\n", onDisplayTest);
 			}
 			// F7: dialog box test
 			else if (keycode == ALLEGRO_KEY_F7) {
@@ -390,12 +451,12 @@ int main(int argc, char* argv[])
 			// F8: toggle dialog box UI skin
 			else if (keycode == ALLEGRO_KEY_F8) {
 				dbox->setFrameVisible(!dbox->isFrameVisible());
-				printf("DialogBox skin %d", dbox->isFrameVisible());
+				printf("DialogBox skin %d\n", dbox->isFrameVisible());
 			}
 			// F9: toggle character face
 			else if (keycode == ALLEGRO_KEY_F9) {
 				dbox->setFaceVisible(!dbox->isFaceVisible());
-				printf("Character face %d", dbox->isFaceVisible());
+				printf("Character face %d\n", dbox->isFaceVisible());
 			}
 			// F10: toggle dialog message rate (5/10)
 			else if (keycode == ALLEGRO_KEY_F10) {
@@ -417,6 +478,8 @@ int main(int argc, char* argv[])
 				player->setBoundaryBoxVisible(boundBoxVisible);
 				npc1->setBoundaryBoxVisible(boundBoxVisible);
 				npc2->setBoundaryBoxVisible(boundBoxVisible);
+				for (int i; i < N_NPCS; i++)
+					npcs[i]->setBoundaryBoxVisible(boundBoxVisible);
 			}
 			else if (keycode == ALLEGRO_KEY_0) {
 				ustrDisp = true;
@@ -524,11 +587,16 @@ int main(int argc, char* argv[])
 				npc1->draw();
 				npc2->draw();
 
+				for (int i = 0; i < N_NPCS; i++)
+					npcs[i]->draw();
+
 				/* drawBoundaryBox() 전체 GameObject::draw() 호출 이후로 우선순위 */
 				if (boundBoxVisible) {
 					player->drawBoundaryBox();
 					npc1->drawBoundaryBox();
 					npc2->drawBoundaryBox();
+					for (int i = 0; i < N_NPCS; i++)
+						npcs[i]->drawBoundaryBox();
 				}
 
 				//sprintf(buf, "[%f, %f]", spr1->getX(), spr1->getY());
@@ -641,6 +709,10 @@ int main(int argc, char* argv[])
 
 	delete goatFaceSpr;
 	delete dbox;
+
+	for (int i = 0; i < N_NPCS; i++) {
+		delete npcs[i];
+	}
 
 	delete npc2;
 	delete npc1;

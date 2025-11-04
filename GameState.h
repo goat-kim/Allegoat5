@@ -66,7 +66,7 @@ private:
 	Player* ptPlayer;			// 현재 컨트롤 중인 플레이어 객체
 	int mapWidth, mapHeight;	// 현재 맵의 크기
 
-	bool colDetect;
+	bool colEnable;
 
 private:
 	void registerEventSources();
@@ -132,8 +132,8 @@ public:
 	void startTimer();
 	void stopTimer();
 
-	bool isCollisionDectionEnabled() const;
-	void setCollisionDetection(bool c);
+	bool isCollisionEnabled() const;
+	void setCollisionEnable(bool c);
 
 	// I/O Routines
 	const bool* getKeyState() const;

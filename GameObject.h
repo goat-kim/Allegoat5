@@ -26,8 +26,8 @@ enum State {
 
 class GameObject {
 protected:
-	SpriteAnimation* sprAni;	// 스프라이트 애니메이션 정보를 포함하고 업데이트하는 객체
-	Sprite* ptSpr;				// sprAni가 포함하고 있는 Sprite 실객체를 가리키는 포인터
+	SpriteAnimation *sprAni;	// 스프라이트 애니메이션 정보를 포함하고 업데이트하는 객체
+	Sprite *ptSpr;				// sprAni가 포함하고 있는 Sprite 실객체를 가리키는 포인터
 	Direction dir;				// 현재 방향
 	State state;				// 현재 (이동 또는 정지 등의) 상태
 	float x, y;					// 실제 좌표
@@ -40,8 +40,10 @@ protected:
 
 	Rect bndBox;				// 경계 상자 (충돌처리 및 디버깅 용)
 	bool bndBoxVisible;			// 경계 상자 시각화 여부
-	//ALLEGRO_COLOR bndBoxColor;
+	
+	int bndBoxColorR;
 	int bndBoxColorG;
+	int bndBoxColorB;
 
 	bool colEnable;
 
@@ -72,10 +74,6 @@ public:
 	float getScaleY() const;
 	Direction getDirect() const;
 
-	void updateBoundaryBox();
-	const Rect& getBoundaryBox() const;
-
-
 	void setScrollMode(bool s);
 	void setBoundaryBoxVisible(bool v);
 	void setColorKey(int r, int g, int b);
@@ -89,8 +87,13 @@ public:
 	void setDirect(int dir);
 	State getState() const;	// State형을 GameObjectState형으로 이름 변경?
 	void setState(int s);
-	bool aabbIntersection(const Rect& rc);
+
+	void updateBoundaryBox();
+	const Rect& getBoundaryBox() const;
+	void setBoundaryBoxColor(int r, int g, int b);
 
 	bool isCollisionEnabled() const;
 	void setCollisionEnable(bool c);
+
+	bool aabbIntersection(const Rect& rc);
 };

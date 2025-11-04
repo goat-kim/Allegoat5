@@ -163,7 +163,7 @@ void Player::update() {
 
 	ptSpr->setXY(scrX, scrY);
 
-	updateBoundaryBox();
+	//updateBoundaryBox();
 }
 
 float Player::getSpeed() const {
