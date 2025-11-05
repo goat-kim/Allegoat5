@@ -20,11 +20,15 @@ GameObject::GameObject()
 	colEnable(true)
 {
 	memset(stopIdx, 0, sizeof(int) * NUM_OF_DIRECT);
+#ifdef DEBUG
 	printf("GameObject()\n");
+#endif
 }
 
 GameObject::~GameObject() {
+#ifdef DEBUG
 	printf("~GameObject(): %s\n", ptSpr->getFilename());
+#endif
 	delete sprAni;
 }
 

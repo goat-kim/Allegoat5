@@ -30,13 +30,17 @@ void ustrDisplayCodes(ALLEGRO_USTR* str) {
 }
 
 UstrVector::UstrVector() {
+#ifdef DEBUG
 	printf("UstrVector()\n");
+#endif
 	vec.clear();
 }
 
 UstrVector::~UstrVector() {
 	std::vector<ALLEGRO_USTR*>::iterator iter;
+#ifdef DEBUG
 	printf("~UstrVector()\n");
+#endif
 	for (iter = vec.begin(); iter != vec.end(); iter++) {
 		al_ustr_free(*iter);
 	}
@@ -55,15 +59,19 @@ bool UstrVector::load(const char* pathname) {
 	while (!feof(fp)) {
 		fgets(buf, BUF_SIZE, fp);
 		//fgets(buf, 512, fp);
+#ifdef DEBUG
 		printf("strlen(buf): %ld\n", strlen(buf));
+#endif
 		char chEnd = buf[strlen(buf) - 1];
 		if (chEnd == '\n') {
 			buf[strlen(buf) - 1] = '\0';
 		}
 		vec.push_back(al_ustr_new(buf));
 		ALLEGRO_USTR *curUstr = vec.back();
+#ifdef DEBUG
 		printf("strlen: %03zu, al_ustr_size: %03zu, al_ustr_length: %03zu\n", 
 			strlen(buf), al_ustr_size(curUstr), al_ustr_length(curUstr));
+#endif
 	}
 	fclose(fp);
 	return true;

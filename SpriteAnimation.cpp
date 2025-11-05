@@ -8,7 +8,9 @@ SpriteAnimation::SpriteAnimation()
 	unitWidth(0), unitHeight(0),
 	stop(true)
 {
+#ifdef DEBUG
 	printf("SpriteAnimation()\n");
+#endif
 	aniList.clear();
 }
 
@@ -16,13 +18,16 @@ bool SpriteAnimation::load(const char* filename) {
 	bool ret = false;
 	spr = new Sprite();
 	ret = spr->load(filename);
+#ifdef DEBUG
 	printf("SpriteAnimation::open(%s): %d\n", filename, ret);
+#endif
 	return ret;
 }
 
 SpriteAnimation::~SpriteAnimation() {
+#ifdef DEBUG
 	printf("~SpriteAnimation(): %s\n", spr->getFilename());
-
+#endif
 	clearAniList();
 	releaseRegionList();
 	if (spr)
@@ -52,14 +57,18 @@ bool SpriteAnimation::createAutomatedRegionList(int row, int col) {
 	for (int i = 0; i < row; i++) {
 		for (int j = 0; j < col; j++) {
 			int curIdx = i * col + j;
+#ifdef DEBUG
 			printf("curIdx/idxBound: %d/%d\n", curIdx, idxBound);
+#endif
 			regList[curIdx].x = unitWidth * j;
 			regList[curIdx].y = unitHeight * i;
 			regList[curIdx].width = unitWidth;
 			regList[curIdx].height = unitHeight;
 		}
 	}
+#ifdef DEBUG
 	printRegionList();
+#endif
 	
 	/* Create AniList */
 	// aniSection: 8개 캐릭터 중 첫 번째 캐릭터의 움직임을 나타내는 인덱스 집합
@@ -76,11 +85,12 @@ bool SpriteAnimation::createAutomatedRegionList(int row, int col) {
 		insertAniListEntry(3, aniSection[i]); // 한 엔트리 당 3개 인덱스
 	}
 	aniList.shrink_to_fit();
-
+#ifdef DEBUG
 	printf("SpriteAnimation::createAutomatedRegionList(): '%d * %d' region list created and '%zu' aniList entry inserted\n", row, col, aniList.size());
 	for (int i = 0; i < 4; i++) {
 		aniList[i]->printList();
 	}
+#endif
 	return true;
 }
 

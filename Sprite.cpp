@@ -12,7 +12,9 @@ Sprite::Sprite()
 }
 
 Sprite::~Sprite() {
+#ifdef DEBUG
 	printf("~Sprite(): %s\n", getFilename());
+#endif
 	if (filename)
 		delete[] filename;
 	//printf("string deleted\n");
@@ -26,10 +28,14 @@ bool Sprite::load(const char* filename) {
 	strcpy(this->filename, filename);
 	bitmap = al_load_bitmap(filename);
 	if (!bitmap) {
+#ifdef DEBUG
 		fprintf(stderr, "Sprite::open(): failed to load bitmap [%s]\n", filename);
+#endif
 		return false;
 	}
+#ifdef DEBUG
 	printf("Sprite::open(): %s\n", filename);
+#endif
 	bitmapWidth = al_get_bitmap_width(bitmap);
 	bitmapHeight = al_get_bitmap_height(bitmap);
 	return true;

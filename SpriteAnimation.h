@@ -28,12 +28,16 @@ public:
 		//	printf("%d ", list[i]);
 		//}
 		//printf("\n");
+#ifdef DEBUG
 		printf("AniListEntry()\n");
+#endif
 	}
 	~AniListEntry() {
 		if (list)
 			delete[] list;
+#ifdef DEBUG
 		printf("~AniListEntry()\n");
+#endif
 	}
 
 	int idxCur() const {

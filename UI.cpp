@@ -17,11 +17,15 @@ UI::UI()
 	marginTop(0), marginBottom(0), marginLeft(0), marginRight(0),
 	paddingTop(0), paddingBottom(0), paddingLeft(0), paddingRight(0)
 {
+#ifdef DEBUG
 	printf("UI()\n");
+#endif
 }
 
 UI::~UI() {
+#ifdef DEBUG
 	printf("~UI()\n");
+#endif
 }
 
 bool UI::isVisible() const {
@@ -318,7 +322,9 @@ DialogBox::DialogBox() :
 	blocking(false),
 	truncated(false)
 {
+#ifdef DEBUG
 	printf("DialogBox()\n");
+#endif
 
 	rate = rateOrigin;
 	usDisplay = al_ustr_new(" ");
@@ -338,7 +344,9 @@ DialogBox::DialogBox() :
 }
 
 DialogBox::~DialogBox() {
+#ifdef DEBUG
 	printf("~DialogBox()\n");
+#endif
 
 	if (usDisplay)
 		al_ustr_free(usDisplay);
@@ -456,14 +464,18 @@ void DialogBox::update() {
 			code = ustrGetNextChar(scriptList.ustrAt(curMsgIdx), &curPos);
 			//nextCode = peekNextChar();
 			//printf("(%d, %d)", code, nextCode);
-			printf("%d ", code);
+#ifdef DEBUG
+				printf("%d ", code);
+#endif
 
 			if (code == -1) {
 				// 텍스트의 끝에 도달할 경우 입력 대기 상태인 DBOX_STATE_IDLE로 전환한다.
 				state = DBOX_STATE_IDLE;
 				blinkCnt = cursorBlinkRate;
+#ifdef DEBUG
 				printf("\n");
 				printf("DialogBox.state: DBOX_STATE_IDLE\n");
+#endif
 			}
 			else {
 				ustrSetChar(usDisplay, 0, code);
@@ -516,8 +528,10 @@ void DialogBox::drawUIFrame() {
 	else {
 		//dboxSpr->draw();
 		Rect contRc = getBorderArea();
+#ifdef DEBUG
 		printf("Dialogbox size: %d, %d\n", contRc.width, contRc.height);
 		printf("UI Frame block size: %d, %d\n", sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME].width, sysUIRegionList[SYSTEM_UI_REGION_IDX_UI_FRAME].height);
+#endif
 		float contScaleX = (float)contRc.width / sysUIRegionList[SYSTEM_UI_REGION_IDX_BACKGROUND].width;
 		float contScaleY = (float)contRc.height / sysUIRegionList[SYSTEM_UI_REGION_IDX_BACKGROUND].height;
 		/* draw UI background (border area) */
@@ -606,7 +620,9 @@ void DialogBox::drawChar() {
 	/* distance가 충분히 좁을 경우 개행 */
 	//if (contRc.x + contRc.width - chrX - chrWidth < paddingRight) {
 	if (getMessageDistance(chrWidth) < paddingRight) {
+#ifdef DEBUG
 		printf("distance: %d\n", getMessageDistance(chrWidth));
+#endif
 		xoffset = 0;
 		yoffset += chrHeight;
 	}
@@ -615,7 +631,9 @@ void DialogBox::drawChar() {
 	if (marginTop + paddingTop + yoffset + chrHeight >= rect.height - marginBottom - paddingBottom) {
 		state = DBOX_STATE_IDLE;
 		truncated = true;
+#ifdef DEBUG
 		printf("DialogBox.state: DBOX_STATE_IDLE (truncated)\n");
+#endif
 	}
 }
 

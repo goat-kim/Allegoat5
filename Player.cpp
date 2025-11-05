@@ -11,11 +11,15 @@ Player::Player() : GameObject(),
 	speed(DEFAULT_SPEED),
 	cKeyCount(-1)
 {
+#ifdef DEBUG
 	printf("Player()\n");
+#endif
 }
 
 Player::~Player() {
+#ifdef DEBUG
 	printf("~Player()\n");
+#endif
 }
 
 bool Player::isMoveKeyPressed() const {

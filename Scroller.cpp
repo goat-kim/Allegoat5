@@ -13,11 +13,15 @@ Scroller::Scroller()
 	fixedX(false), fixedY(false),
 	svp()
 {
+#ifdef DEBUG
 	printf("Scroller()\n");
+#endif
 }
 
 Scroller::~Scroller() {
+#ifdef DEBUG
 	printf("~Scroller()\n");
+#endif
 }
 
 //bool Scroller::init(const Rect& bgBound, Player* pt) {
@@ -57,12 +61,14 @@ bool Scroller::init(const Rect& bgBound) {
 	prevX = vp.x;
 	prevY = vp.y;
 
+#ifdef DEBUG
 	printf("Scroller::init(const Rect&)=======\n");
 	printf("playerXY: [%f, %f]\n", px, py);
 	printf("vp: [%d, %d, %d, %d]\n", vp.x, vp.y, vp.width, vp.height);
 	printf("bgBnd: [%d, %d, %d, %d]\n", bgBnd.x, bgBnd.y, bgBnd.width, bgBnd.height);
 	printf("prevXY: [%f, %f]\n", prevX, prevY);
 	printf("==================================\n");
+#endif
 	return true;
 }
 

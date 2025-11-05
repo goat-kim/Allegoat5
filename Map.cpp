@@ -3,11 +3,15 @@
 #include <cstring>
 
 Map::Map() : bgm(nullptr), bgs(nullptr) {
+#ifdef DEBUG
 	printf("Map()\n");
+#endif
 }
 
 Map::~Map() {
+#ifdef DEBUG
 	printf("~Map()\n");
+#endif
 }
 
 bool Map::init() {

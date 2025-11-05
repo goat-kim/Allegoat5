@@ -21,14 +21,18 @@ GameState::GameState()
 	mapWidth(TARGET_BITMAP_WIDTH), mapHeight(TARGET_BITMAP_HEIGHT),
 	curGameState(GAME_STATE_INIT)
 {
+#ifdef DEBUG
 	printf("GameState()\n");
+#endif
 	memset(gameTitle, 0, sizeof(gameTitle));
 	memset(pressedKeys, 0, sizeof(pressedKeys));
 	memset(prevPressedKeys, 0, sizeof(prevPressedKeys));
 }
 
 GameState::~GameState() {
+#ifdef DEBUG
 	printf("~GameState()\n");
+#endif
 	if (scroller)
 		delete scroller;
 	destroyAllegroObjects();
@@ -36,7 +40,9 @@ GameState::~GameState() {
 
 /* Private member functions */
 void GameState::registerEventSources() {
+#ifdef DEBUG
 	printf("GameState::registerEventSources()\n");
+#endif
 	al_register_event_source(eventQueue, al_get_keyboard_event_source());
 	al_register_event_source(eventQueue, al_get_mouse_event_source());
 	al_register_event_source(eventQueue, al_get_display_event_source(display));
@@ -137,7 +143,9 @@ bool GameState::init() {
 }
 
 bool GameState::init(int w, int h) {
+#ifdef DEBUG
 	printf("GameState::init(%d, %d)\n", w, h);
+#endif
 	curGameState = GAME_STATE_INIT;
 	displayWidth = w;
 	displayHeight = h;
@@ -419,7 +427,9 @@ void GameState::saveToPrevKeyState() {
 void GameState::onDisplayResize() {
 	displayWidth = al_get_bitmap_width(displayBitmap);
 	displayHeight = al_get_bitmap_height(displayBitmap);
+#ifdef DEBUG
 	printf("dw, dh: %d, %d\n", displayWidth, displayHeight);
+#endif
 }
 
 bool GameState::isFullscreen() const {
@@ -432,7 +442,9 @@ void GameState::toggleFullscreen() {
 	al_toggle_display_flag(display, ALLEGRO_FULLSCREEN_WINDOW, fullscreen);
 	displayWidth = al_get_display_width(display);
 	displayHeight = al_get_display_height(display);
+#ifdef DEBUG
 	printf("width: %d, height: %d\n", displayWidth, displayHeight);
+#endif
 }
 
 void GameState::screenshot(const char *path) {

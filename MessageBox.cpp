@@ -7,11 +7,15 @@
 // -> 굳이 헤더 파일을 나눌 필요는 없을 듯?
 
 DialogBox::DialogBox() {
+#ifdef DEBUG
 	printf("MessageBox()\n");
+#endif
 }
 
 DialogBox::~DialogBox() {
+#ifdef DEBUG
 	printf("~MessageBox()\n");
+#endif
 }
 
 void DialogBox::update() {

@@ -21,6 +21,8 @@
 
 #define N_NPCS 50
 
+#define DEBUG
+
 bool allegroInit() {
 	printf("allegroInit()\n");
 
@@ -78,14 +80,14 @@ bool loadResources(void) {
 int main(int argc, char *argv[])
 {
 	if (!allegroInit()) {
-		fprintf(stderr, "Failed to initialize allegro system: program aborted\n");
+		fprintf(stderr, "E: failed to initialize allegro system: program aborted\n");
 		return -1;
 	}
 
 	GameState *gameState = GameState::getInstance();
 	//if (!gameState->init()) {
 	if (!gameState->init(640, 480)) {
-		fprintf(stderr, "Failed to initialize game state: program aborted\n");
+		fprintf(stderr, "E: failed to initialize game state: program aborted\n");
 		//delete gameState;
 		return -1;
 	}
@@ -120,7 +122,7 @@ int main(int argc, char *argv[])
 
 	Player *player = new Player();
 	if (!player->init("img/Animal.png")) {
-		fprintf(stderr, "could not initialize object 'player'\n");
+		fprintf(stderr, "E: could not initialize object 'player'\n");
 		return -1;
 	}
 	
@@ -137,7 +139,7 @@ int main(int argc, char *argv[])
 
 	Npc1 *npc1 = new Npc1();
 	if (!npc1->init("img/Actor2.png")) {
-		fprintf(stderr, "could not initialize object 'npc1'\n");
+		fprintf(stderr, "E: could not initialize object 'npc1'\n");
 		return -1;
 	}
 	//npc1->setScale(5.0f);
@@ -148,7 +150,7 @@ int main(int argc, char *argv[])
 
 	GameObject *npc2 = new GameObject();
 	if (!npc2->init("img/Actor2.png")) {
-		fprintf(stderr, "could not initialize object 'npc2'\n");
+		fprintf(stderr, "E: could not initialize object 'npc2'\n");
 		return -1;
 	}
 	npc2->setScaleY(1.5f);
@@ -163,15 +165,22 @@ int main(int argc, char *argv[])
 	for (int i = 0; i < N_NPCS; i++) {
 		npcs[i] = new GameObject();
 		if (!npcs[i]->init("img/Actor1.png")) {
-			fprintf(stderr, "could not initialize object 'npcs[%d]\n", i);
+			fprintf(stderr, "E: could not initialize object 'npcs[%d]\n", i);
 			return -1;
 		}
 		npcs[i]->setColorKey(0x20, 0x9c, 0x00);
 		npcs[i]->setAnimationSpeed(ANIM_NORMAL); // 기본값이 ANIM_NORMAL임
-		npcs[i]->setXY(400 + i * 30, 600);
+		//npcs[i]->setXY(400 + i * 30, 600);
 		npcs[i]->setDirect(DIRECT_LEFT);
 	}
 
+	const int N_ROWS = 4;
+	int objIdx = 0;
+	for (int i = 0; i < N_ROWS; i++) {
+		for (int j = 0; j < N_NPCS / N_ROWS; j++) {
+			npcs[objIdx++]->setXY(490 + j * 30, 540 + i * 50);
+		}
+	}
 
 	gameState->setCurrentPlayer(player);
 	// 배경 사진(sprBG1)의 크기를 기준으로 맵 크기 설정
@@ -257,6 +266,7 @@ int main(int argc, char *argv[])
 	const int BLINK_RATE = 40;
 	int blinkCnt = BLINK_RATE;
 	bool drawEn = true;
+	bool debugScreen = true;
 	// ================================================
 
 	while (mainLoop) {
@@ -330,10 +340,12 @@ int main(int argc, char *argv[])
 						player->setBoundaryBoxColor(255, 255, 0);
 				}
 
-				vp = ptScroll->getViewPort();
-				sprintf(buf, "position: [%f, %f]", player->getX(), player->getY());
-				sprintf(vpLog, "view port: [%d, %d, %d, %d]", vp->x, vp->y, vp->width, vp->height);
-				sprintf(vxyLog, "velocity: [%f, %f]", player->getVx(), player->getVy());
+				if (debugScreen) {
+					vp = ptScroll->getViewPort();
+					sprintf(buf, "position: [%f, %f]", player->getX(), player->getY());
+					sprintf(vpLog, "view port: [%d, %d, %d, %d]", vp->x, vp->y, vp->width, vp->height);
+					sprintf(vxyLog, "velocity: [%f, %f]", player->getVx(), player->getVy());
+				}
 				//sprintf(gameState->getScroller()->getScaledViewPort(10.0f));
 				//scroll->update();
 				//printf("vp.diff: [%d, %d]\n", scroll->getDx(), scroll->getDy());
@@ -405,7 +417,8 @@ int main(int argc, char *argv[])
 			// LSHIFT+F2: TODO
 			else if (keycode == ALLEGRO_KEY_F2) {
 				if (gameState->isKeyDown(ALLEGRO_KEY_LSHIFT)) {
-					printf("LSHIFT+F2\n");
+					debugScreen = !debugScreen;
+					printf("Debug screen: %d\n", debugScreen);
 				}
 				else {
 					gameState->setDisplaySize(320, 240);
@@ -654,9 +667,11 @@ int main(int argc, char *argv[])
 				}
 
 				/* 화면에 출력되는 로그는 화면 크기와 독립적으로 출력한다. */
-				al_draw_text(font1, al_map_rgb(255, 255, 255), 10, 10, 0, buf);
-				al_draw_text(font1, al_map_rgb(255, 255, 255), 10, 30, 0, vpLog);
-				al_draw_text(font1, al_map_rgb(255, 255, 255), 10, 50, 0, vxyLog);
+				if (debugScreen) {
+					al_draw_text(font1, al_map_rgb(255, 255, 255), 10, 10, 0, buf);
+					al_draw_text(font1, al_map_rgb(255, 255, 255), 10, 30, 0, vpLog);
+					al_draw_text(font1, al_map_rgb(255, 255, 255), 10, 50, 0, vxyLog);
+				}
 				al_flip_display();
 			}
 			else if (curGameState == GAME_STATE_SPLASH) {

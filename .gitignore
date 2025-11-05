@@ -6,6 +6,7 @@
 screenshots/
 allegoat
 *.o
+debug-keys.txt
 
 # User-specific files
 *.rsuser

@@ -9,12 +9,16 @@
 
 Tileset::Tileset(int tw, int th) : tileWidth(tw), tileHeight(th), 
 	tilesetWidth(0), tilesetHeight(0), mapspr(nullptr) {
+#ifdef DEBUG
 	printf("Tileset()\n");
+#endif
 }
 
 Tileset::~Tileset() {
 	delete mapspr;
+#ifdef DEBUG
 	printf("~Tileset()\n");
+#endif
 }
 
 bool Tileset::load(const char* filename) {
@@ -75,7 +79,9 @@ Rect Tileset::toRect(int tid) const {
 TilemapLayer::TilemapLayer(Tileset* tsPtr)
 	: mapWidth(0), mapHeight(0),
 	layerBitmap(nullptr), ptTileset(tsPtr) {
+#ifdef DEBUG
 	printf("TilemapLayer(Tileset*)\n");
+#endif
 	map.clear();
 }
 
@@ -83,7 +89,9 @@ TilemapLayer::~TilemapLayer() {
 	if (layerBitmap)
 		al_destroy_bitmap(layerBitmap);
 	map.clear();
+#ifdef DEBUG
 	printf("~TilemapLayer()\n");
+#endif
 }
 
 // -1: null (\0)
@@ -161,9 +169,11 @@ bool TilemapLayer::load(const char* filename) {
 	fread(csvbuf, 1, bufSize, fp);
 	fclose(fp);
 
+#ifdef DEBUG
 	printf("file name: %s\n", filename);
 	printf("buffer size: %ld\n", bufSize);
 	printf("csvbuf[bufSize-1]: %d\n", csvbuf[bufSize - 1]);
+#endif
 
 	mapWidth = 0;
 	mapHeight = 0;
@@ -182,12 +192,14 @@ bool TilemapLayer::load(const char* filename) {
 		//printf("%03d ", tileId);
 		map.push_back(Tile(tileId, 0));
 	}
+#ifdef DEBUG
 	printf("\n");
 	printf("total: %d tiles\n", tileCnt);
 	printf("map width: %d, map height: %d\n", mapWidth, mapHeight);
 	printf("csvbuf:\t%p\n", csvbuf);
 	printf("ptr:\t%p\n", ptr);
 	printf("map.size(): %zu\n", map.size());
+#endif
 
 	free(csvbuf);
 	csvbuf = nullptr;
@@ -304,7 +316,9 @@ int TilemapLayer::getMapHeightPx() const {
 
 Tilemap::Tilemap(int tw, int th) 
 	: tileWidth(tw), tileHeight(th) {
+#ifdef DEBUG
 	printf("Tilemap::Tilemap()\n");
+#endif
 	layers.clear();
 }
 

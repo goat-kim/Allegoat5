@@ -13,7 +13,9 @@ Npc1::Npc1() : count(0), isCollision(0) {
 	this->stopIdx[DIRECT_RIGHT] = 13;
 }
 Npc1::~Npc1() {
+#ifdef DEBUG
 	printf("~Npc1()\n");
+#endif
 }
 
 void Npc1::customUpdate() {
