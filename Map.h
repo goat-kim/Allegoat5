@@ -1,30 +1,31 @@
 #pragma once
 #include "Sound.h"
-#include "Tilemap.h"
 #include <vector>
 #include <string>
 using std::string;
 
 class Map {
 private:
+	int id;
+
 	Sound *bgm;
 	Sound *bgs;
 	bool bgmLoop;
 	bool bgsLoop;
 
-	Tilemap* map;
-
 	// TODO: 그외 전환 효과
 
 public:
-	Map();
+	Map(int mapid);
 	~Map();
 	bool init();
 	bool loadBGM(const char* pathname);
 	bool loadBGS(const char* pathname);
+	int getId() const;
 	// Map *load
 };
 
+/*
 // MapStatList entry
 class MapStat {
 private:
@@ -39,3 +40,4 @@ public:
 	void setLabel(const string& l);
 	bool isValid() const;
 };
+*/

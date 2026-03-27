@@ -36,7 +36,7 @@ protected:
 	float prevScrX, prevScrY;	// 이전 프레임에서 화면상에 출력되는 좌표
 	float vx, vy;				// 게임 오브젝트의 속도 벡터
 	bool scrollMode;			// 게임 오브젝트가 스크롤링에 영향을 받는지 여부
-	int scrWidth, scrHeight;	// 화면 크기 (스크롤링 처리용)
+	int scrWidth, scrHeight;	// 화면 크기 (정확히는 뷰포트의 크기. 스크롤링 처리용)
 
 	Rect bndBox;				// 경계 상자 (충돌처리 및 디버깅 용)
 	bool bndBoxVisible;			// 경계 상자 시각화 여부
@@ -74,6 +74,9 @@ public:
 	float getScaleY() const;
 	Direction getDirect() const;
 
+	float getWidth() const;
+	float getHeight() const;
+
 	void setScrollMode(bool s);
 	void setBoundaryBoxVisible(bool v);
 	void setColorKey(int r, int g, int b);
@@ -89,6 +92,7 @@ public:
 	void setState(int s);
 
 	void updateBoundaryBox();
+	void updateBackend(const Rect& rc);
 	const Rect& getBoundaryBox() const;
 	void setBoundaryBoxColor(int r, int g, int b);
 

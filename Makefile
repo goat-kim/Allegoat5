@@ -5,7 +5,8 @@ OBJS := main.o \
 		Sprite.o \
 		SpriteAnimation.o \
 		Scroller.o \
-		Tilemap.o \
+		Map.o \
+		TileMap.o \
 		GameObject.o \
 		Player.o \
 		Sound.o \
@@ -14,10 +15,11 @@ OBJS := main.o \
 
 TARGET = allegoat
 LIBS := allegro-5 allegro_acodec-5 allegro_audio-5 allegro_color-5 allegro_font-5 allegro_image-5 allegro_primitives-5 allegro_ttf-5
+# CXXFLAGS := -Wall `pkg-config --cflags --libs $(LIBS)` -DDEBUG
 CXXFLAGS := -Wall `pkg-config --cflags --libs $(LIBS)`
 # CXXFLAGS += -g
 
-.PHONY: all
+.PHONY: all clean
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
@@ -46,7 +48,10 @@ SpriteAnimation.o: SpriteAnimation.cpp SpriteAnimation.h
 Scroller.o: Scroller.cpp Scroller.h
 	$(CXX) $(CXXFLAGS) -c $<
 
-Tilemap.o: Tilemap.cpp Tilemap.h
+Map.o: Map.cpp Map.h
+	$(CXX) $(CXXFLAGS) -c $<
+
+TileMap.o: TileMap.cpp TileMap.h
 	$(CXX) $(CXXFLAGS) -c $<
 
 GameObject.o: GameObject.cpp GameObject.h
@@ -64,7 +69,6 @@ UI.o: UI.cpp UI.h
 Npc1.o: Npc1.cpp Npc1.h
 	$(CXX) $(CXXFLAGS) -c $<
 
-.PHONY: clean
 clean:
 	rm -f *.o
 	rm -f $(TARGET)

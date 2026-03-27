@@ -2,15 +2,15 @@
 #include <cstdio>
 #include <cstring>
 
-Map::Map() : bgm(nullptr), bgs(nullptr) {
+Map::Map(int mapid) : id(mapid), bgm(nullptr), bgs(nullptr) {
 #ifdef DEBUG
-	printf("Map()\n");
+	printf("Map(id=%d)\n", id);
 #endif
 }
 
 Map::~Map() {
 #ifdef DEBUG
-	printf("~Map()\n");
+	printf("~Map(), id=%d\n", id);
 #endif
 }
 
@@ -25,6 +25,11 @@ bool Map::loadBGS(const char* pathname) {
 
 }
 
+int Map::getId() const {
+	return id;
+}
+
+/*
 int MapStat::getId() const {
 	return id;
 }
@@ -36,3 +41,4 @@ string MapStat::getLabel() const {
 bool MapStat::idValid() const {
 	return valid;
 }
+*/

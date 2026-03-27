@@ -1,4 +1,4 @@
-#include "Tilemap.h"
+#include "TileMap.h"
 #include "Sprite.h"
 #include "Util.h"
 #include <cstdio>
@@ -69,34 +69,34 @@ Rect Tileset::toRect(int tid) const {
 	return rc;
 }
 
-//TilemapLayer::TilemapLayer()
+//TileMapLayer::TileMapLayer()
 //	: mapWidth(0), mapHeight(0),
 //	layerBitmap(nullptr), ptTileset(nullptr) {
-//	printf("TilemapLayer()\n");
+//	printf("TileMapLayer()\n");
 //	map.clear();
 //}
 
-TilemapLayer::TilemapLayer(Tileset* tsPtr)
+TileMapLayer::TileMapLayer(Tileset* tsPtr)
 	: mapWidth(0), mapHeight(0),
 	layerBitmap(nullptr), ptTileset(tsPtr) {
 #ifdef DEBUG
-	printf("TilemapLayer(Tileset*)\n");
+	printf("TileMapLayer(Tileset*)\n");
 #endif
 	map.clear();
 }
 
-TilemapLayer::~TilemapLayer() {
+TileMapLayer::~TileMapLayer() {
 	if (layerBitmap)
 		al_destroy_bitmap(layerBitmap);
 	map.clear();
 #ifdef DEBUG
-	printf("~TilemapLayer()\n");
+	printf("~TileMapLayer()\n");
 #endif
 }
 
 // -1: null (\0)
 // -2: LF (\n)
-int TilemapLayer::tok(char** buf) {
+int TileMapLayer::tok(char** buf) {
 	char curCh;
 	int tileIdx = 0;
 
@@ -136,13 +136,13 @@ int TilemapLayer::tok(char** buf) {
 	return -1;
 }
 
-bool TilemapLayer::load(const char* filename) {
+bool TileMapLayer::load(const char* filename) {
 	char* csvbuf = NULL;
 	long fileSize = 0, bufSize = 0;
 	FILE* fp = NULL;
 
 	if (!ptTileset) {
-		fprintf(stderr, "TilemapLayer::load(): ptTileset is not initialized\n");
+		fprintf(stderr, "TileMapLayer::load(): ptTileset is not initialized\n");
 		return false;
 	}
 	int tileWidth = ptTileset->getTileWidth();
@@ -213,15 +213,15 @@ bool TilemapLayer::load(const char* filename) {
 	return true;
 }
 
-//bool TilemapLayer::loadMapSprite(const char* filename) {
+//bool TileMapLayer::loadMapSprite(const char* filename) {
 //	
 //}
 
-void TilemapLayer::setTileset(Tileset* tsPtr) {
+void TileMapLayer::setTileset(Tileset* tsPtr) {
 	ptTileset = tsPtr;
 }
 
-void TilemapLayer::draw() {
+void TileMapLayer::draw() {
 
 
 	ALLEGRO_BITMAP* targetOrigin = al_get_target_bitmap();
@@ -261,72 +261,105 @@ void TilemapLayer::draw() {
 	al_set_target_bitmap(targetOrigin);
 }
 
-int TilemapLayer::getTileId(int idx) {
+int TileMapLayer::getTileId(int idx) {
 	int maxIdx = (mapWidth * mapHeight) - 1;
 	if (idx > maxIdx || idx < 0) // illegal index
 		return -1;
 	return map[idx].id;
 }
 
-int TilemapLayer::getTileId(int x, int y) {
+int TileMapLayer::getTileId(int x, int y) {
 	return getTileId((mapWidth * y) + x);
 }
 
-int TilemapLayer::getTileType(int idx) {
+int TileMapLayer::getTileType(int idx) {
 	int maxIdx = (mapWidth * mapHeight) - 1;
 	if (idx > maxIdx || idx < 0)
 		return -1;
 	return map[idx].type;
 }
 
-int TilemapLayer::getTileType(int x, int y) {
+int TileMapLayer::getTileType(int x, int y) {
 	return getTileType((mapWidth * y) + x);
 }
 
-ALLEGRO_BITMAP* TilemapLayer::getLayerBitmap() const {
+ALLEGRO_BITMAP* TileMapLayer::getLayerBitmap() const {
 	return layerBitmap;
 }
 
-int TilemapLayer::getMapWidth() const {
+int TileMapLayer::getMapWidth() const {
 	return mapWidth;
 }
 
-int TilemapLayer::getMapHeight() const {
+int TileMapLayer::getMapHeight() const {
 	return mapHeight;
 }
 
-int TilemapLayer::getTileWidth() const {
+int TileMapLayer::getTileWidth() const {
 	//return ptTileset->tileWidth;
 	return ptTileset->getTileWidth();
 }
 
-int TilemapLayer::getTileHeight() const {
+int TileMapLayer::getTileHeight() const {
 	//return tileHeight;
 	return ptTileset->getTileHeight();
 }
 
-int TilemapLayer::getMapWidthPx() const {
+int TileMapLayer::getMapWidthPx() const {
 	return mapWidth * ptTileset->getTileWidth();
 }
 
-int TilemapLayer::getMapHeightPx() const {
+int TileMapLayer::getMapHeightPx() const {
 	//return mapHeight * tileHeight;
 	return mapHeight * ptTileset->getTileHeight();
 }
 
-Tilemap::Tilemap(int tw, int th) 
-	: tileWidth(tw), tileHeight(th) {
+TileMap::TileMap(int mapid, int tw, int th) 
+	: Map(mapid), tileWidth(tw), tileHeight(th) {
 #ifdef DEBUG
-	printf("Tilemap::Tilemap()\n");
+	printf("TileMap::TileMap(id=%d)\n", id);
 #endif
 	layers.clear();
 }
 
-void Tilemap::draw() {
+TileMap::~TileMap() {
+#ifdef DEBUG
+	printf("TileMap::~TileMap(): id=%d\n", id);
+#endif
+	while (!layers.empty()) {
+		TileMapLayer *lp = layers.back();
+		delete lp;
+		layers.pop_back();
+	}
+}
+
+void TileMap::draw() {
 	// (1). 하위 레이어부터 상위 레이어까지 각 레이어의 비트맵을 화면(target bitmap)에 그린다.
 	// (2). 플레이어와 NPC 등의 게임 오브젝트를 target bitmap에 그린다.
 	// (3). (2)보다 우선순위가 높은(즉, 위로 올라가야 하는) 높은 타일들을 다시 target bitmap에 그린다.
 	// (3)의 기능은 draw대신 다른 멤버 함수로 분리할 것
 
 	// 반복 시 foreach나 iterator를 사용할 것
+	for (int i = 0; i < layers.size(); i++)
+		layers[i]->draw();
+}
+
+void TileMap::append(TileMapLayer *layer) {
+	layers.push_back(layer);
+}
+
+int TileMap::getLayerCount() const {
+	return layers.size();
+}
+
+int TileMap::getMapWidthPx() const {
+	if (layers.empty())
+		return -1;
+	return layers[0]->getMapWidthPx();
+}
+
+int TileMap::getMapHeightPx() const {
+	if (layers.empty())
+		return -1;
+	return layers[0]->getMapHeightPx();
 }

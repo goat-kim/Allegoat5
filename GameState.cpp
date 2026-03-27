@@ -204,7 +204,7 @@ void GameState::initMap(int w, int h) {
 	mapHeight = h;
 	if (!scroller)
 		scroller = new Scroller();
-	scroller->init();
+	scroller->init(); // 현재 맵 사이즈를 기준으로 scroller 객체 초기화
 }
 
 void GameState::update() {
@@ -219,6 +219,17 @@ int GameState::getCurrentGameState() const {
 
 void GameState::setCurrentGameState(int state) {
 	curGameState = state;
+}
+
+void setCurrentMap(Map *curmap) {
+	ptMap = curmap;
+	if (!scroller)
+		scroller = new Scroller();
+	scroller->
+}
+
+Map *getCurrentMap() const {
+	return ptMap;
 }
 
 ALLEGRO_EVENT_QUEUE* GameState::getEventQueue() const {

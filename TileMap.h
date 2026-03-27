@@ -2,6 +2,7 @@
 #include <vector>
 #include <cstdint>
 #include "Util.h"
+#include "Map.h"
 
 const int DEFAULT_TILE_WIDTH = 16;
 const int DEFAULT_TILE_HEIGHT = 16;
@@ -36,21 +37,20 @@ public:
 };
 
 // 각 레이어에 타일맵을 일단 한 번 draw해두면 업데이트가 발생하지 않는 이상 매 프레임마다 다시 그릴 필요가 없다.
-class TilemapLayer {
+class TileMapLayer {
 private:
 	int mapWidth, mapHeight;		// 맵의 가로/세로 타일 개수
-	//int tileWidth, tileHeight;		// 타일의 가로/세로 픽셀 길이
 	ALLEGRO_BITMAP* layerBitmap;
 	std::vector<Tile> map;
-	Tileset* ptTileset;				// 
+	Tileset* ptTileset;				// Tileset object's pointer
 	//char* filename;
 
 private:
 	int tok(char** buf); // null: -1, LF: -2, otherwise: tileID
 public:
-	//TilemapLayer();
-	TilemapLayer(Tileset* tsPtr);
-	~TilemapLayer();
+	//TileMapLayer();
+	TileMapLayer(Tileset* tsPtr);
+	~TileMapLayer();
 	bool load(const char* filename);
 	//bool loadMapSprite(const char* filename);
 	void setTileset(Tileset* tsPtr);
@@ -72,13 +72,16 @@ public:
 	//const Tile& getTile(int x, int y);
 };
 
-class Tilemap {
+class TileMap: public Map {
 private:
-	//int nlayers;
-	//TilemapLayer* layers;
-	std::vector<TilemapLayer*> layers;
 	int tileWidth, tileHeight;
+	std::vector<TileMapLayer*> layers;
 public:
-	Tilemap(int tw = DEFAULT_TILE_WIDTH, int th = DEFAULT_TILE_HEIGHT);
+	TileMap(int mapid, int tw = DEFAULT_TILE_WIDTH, int th = DEFAULT_TILE_HEIGHT);
+	~TileMap();
 	void draw();
+	void append(TileMapLayer* layer);
+	int getLayerCount() const;
+	int getMapWidthPx() const;
+	int getMapHeightPx() const;
 };

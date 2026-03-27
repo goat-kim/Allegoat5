@@ -2,6 +2,8 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/keycodes.h>
 
+class Map;
+
 //static const char* GAME_TITLE = "Goat Simulator";
 
 static const char* GAME_STATE_SYSTEM_FONT_PATH_SANS = "font/Dotum-03.ttf";
@@ -64,7 +66,8 @@ private:
 
 	Scroller* scroller;
 	Player* ptPlayer;			// 현재 컨트롤 중인 플레이어 객체
-	int mapWidth, mapHeight;	// 현재 맵의 크기
+	Map *ptMap;					// current map
+	// int mapWidth, mapHeight;	// 현재 맵의 크기
 
 	bool colEnable;
 
@@ -84,12 +87,15 @@ public:
 
 	bool init();
 	bool init(int w, int h);	// initialize with display width and height
-	void initMap();
-	void initMap(int w, int h);
+	// void initMap();
+	// void initMap(int w, int h);
 	void update();
 
 	int getCurrentGameState() const;
 	void setCurrentGameState(int state);
+
+	void setCurrentMap(Map *curmap);
+	Map *getCurrentMap() const;
 
 	ALLEGRO_EVENT_QUEUE* getEventQueue() const;
 	ALLEGRO_FONT* getBuiltinFont() const;

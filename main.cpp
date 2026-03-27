@@ -16,16 +16,15 @@
 #include "Npc1.h"
 #include "Sound.h"
 #include "Scroller.h"
-#include "Tilemap.h"
+#include "TileMap.h"
 #include "UI.h"
 
 #define N_NPCS 50
 
-#define DEBUG
-
 bool allegroInit() {
+#ifdef DEBUG
 	printf("allegroInit()\n");
-
+#endif
 	if (!al_init()) {
 		fprintf(stderr, "E: failed to initialize allegro\n");
 		return false;
@@ -68,7 +67,7 @@ bool allegroInit() {
 	return true;
 }
 
-void cleanUp(void) {
+void cleanup(void) {
 	GameState::destroyInstance();
 }
 
@@ -146,7 +145,9 @@ int main(int argc, char *argv[])
 	npc1->setColorKey(0x20, 0x9c, 0x00);
 	npc1->setAnimationSpeed(ANIM_NORMAL);
 	npc1->setXY(200, 200);
+#ifdef DEBUG
 	printf("npc1.x=%f, npc1.y=%f\n", npc1->getX(), npc1->getY());
+#endif
 
 	GameObject *npc2 = new GameObject();
 	if (!npc2->init("img/Actor2.png")) {
@@ -174,11 +175,15 @@ int main(int argc, char *argv[])
 		npcs[i]->setDirect(DIRECT_LEFT);
 	}
 
-	const int N_ROWS = 4;
+	const int N_COLS = 20;
+	const int N_ROWS = N_NPCS / N_COLS;
 	int objIdx = 0;
-	for (int i = 0; i < N_ROWS; i++) {
-		for (int j = 0; j < N_NPCS / N_ROWS; j++) {
-			npcs[objIdx++]->setXY(490 + j * 30, 540 + i * 50);
+
+	for (int i = 0; i < N_ROWS + 1; i++) {
+		for (int j = 0; j < N_COLS; j++) {
+			npcs[objIdx++]->setXY(480 + j * 30, 540 + i * 50);
+			if (objIdx >= N_NPCS)
+				break;
 		}
 	}
 
@@ -188,28 +193,73 @@ int main(int argc, char *argv[])
 	//gameState->initMap();
 	//
 
-	Tileset* tilesetMap1 = new Tileset();
-	tilesetMap1->load("img/Interior.png");
+	// Initialize tile sets
+	Tileset* tsInterior = new Tileset();
+	tsInterior->load("img/Interior.png");
 
-	TilemapLayer* layer1 = new TilemapLayer(tilesetMap1);
-	//map1Layer1->load("map/map1.csv");
+	// Initialize tile map layers
+	TileMapLayer *map00_layer0 = new TileMapLayer(tsInterior);
+	map00_layer0->load("map/map00.csv");
+
+	TileMapLayer *map00_1_layer0 = new TileMapLayer(tsInterior);
+	TileMapLayer *map00_1_layer1 = new TileMapLayer(tsInterior);
+	map00_1_layer0->load("map/map00-1_l0.csv");
+	map00_1_layer1->load("map/map00-1_l1.csv");
+	
+	TileMapLayer *map00_2_layer0 = new TileMapLayer(tsInterior);
+	TileMapLayer *map00_2_layer1 = new TileMapLayer(tsInterior);
+	map00_2_layer0->load("map/map00-2_l0.csv");
+	map00_2_layer1->load("map/map00-2_l1.csv");
+
+	// Initialize tile maps
+	// default tile width=16, tile height=16
+	TileMap *map00 = new TileMap(0);
+	TileMap *map00_1 = new TileMap(1);
+	TileMap *map00_2 = new TileMap(2);
+
+	map00->append(map00_layer0);
+	map00_1->append(map00_1_layer0);
+	map00_1->append(map00_1_layer1);
+	map00_2->append(map00_2_layer0);
+	map00_2->append(map00_2_layer1);
+
+	//TileMapLayer* layer1 = new TileMapLayer(tilesetMap1);
 	//layer1->setTileset(tilesetMap1);
-	layer1->load("map/kemo.csv");
+	//layer1->load("map/kemo.csv");
 
-	layer1->draw();
+	// Map render
+	map00->draw();
+	map00_1->draw();
+	map00_2->draw();
 
-	gameState->setMapSize(layer1->getMapWidthPx(), layer1->getMapHeightPx());
+	//layer1->draw();
+
+	// 현재 타일맵의 픽셀 사이즈를 기준으로 맵 픽셀 사이즈 설정
+	TileMap *ptCurrentMap = map00;
+	int curMapWidthPx = ptCurrentMap->getMapWidthPx();
+	int curMapHeightPx = ptCurrentMap->getMapHeightPx();
+	if (curMapWidthPx == -1 || curMapHeightPx == -1) {
+		fprintf(stderr, "E: current tile map is not initialized\n");
+		return -1;
+	}
+	gameState->setMapSize(curMapWidthPx, curMapHeightPx);
+#ifdef DEBUG
 	printf("map size: [%d, %d]\n", gameState->getMapWidth(), gameState->getMapHeight());
+#endif
 	gameState->initMap();
 
 	gameState->startTimer();
+#ifdef DEBUG
 	printf("current bitmap: %p\n", gameState->getCurrentTargetBitmap());
 	printf("system target bitmap: %p\n", gameState->getSystemTargetBitmap());
 	printf("display bitmap: %p\n", gameState->getDisplayBitmap());
+#endif
 	//sound1->play(true);
 
 	Scroller* ptScroll = gameState->getScroller();
+#ifdef DEBUG
 	printf("scroller fixed: %d %d\n", ptScroll->isFixX(), ptScroll->isFixY());
+#endif
 	const Rect* vp = nullptr;
 
 	//gameState->setDisplaySize(320, 240);
@@ -243,7 +293,9 @@ int main(int argc, char *argv[])
 
 	bool boundBoxVisible = false;
 
+#ifdef DEBUG
 	printf("dbox.width: %d\n", dbox->getWidth());
+#endif
 
 	Sprite *goatFaceSpr = new Sprite();
 	goatFaceSpr->load("img/chr1.png");
@@ -299,6 +351,8 @@ int main(int argc, char *argv[])
 					npc1->updateBoundaryBox();
 					npc2->updateBoundaryBox();
 
+					player->updateBackend(npc2->getBoundaryBox());
+
 					// collision detection
 					bool colPlayer = false;
 					bool colNpc1 = player->aabbIntersection(npc1->getBoundaryBox());
@@ -353,7 +407,9 @@ int main(int argc, char *argv[])
 			else if (curGameState == GAME_STATE_SPLASH) {
 				if (splashCnt <= 0) {
 					gameState->setCurrentGameState(GAME_STATE_TITLE);
+#ifdef DEBUG
 					printf("Set current game state to GAME_STATE_TITLE\n");
+#endif
 				}
 				//printf("splashCnt: %d\n", splashCnt);
 				splashCnt--;
@@ -402,7 +458,7 @@ int main(int argc, char *argv[])
 				//Sound::stopAll();
 			}
 			// F1: set display size to 640x480
-			// LSHIFT+F1: TODO
+			// LSHIFT+F1: global collision
 			else if (keycode == ALLEGRO_KEY_F1) {
 				if (gameState->isKeyDown(ALLEGRO_KEY_LSHIFT)) {
 					gameState->setCollisionEnable(!gameState->isCollisionEnabled());
@@ -593,7 +649,6 @@ int main(int argc, char *argv[])
 				/* 레이어 별 맵 출력 */
 				const Rect* rc = gameState->getScroller()->getScaledViewPort(bgScale);
 				al_draw_bitmap_region(layer1->getLayerBitmap(), rc->x, rc->y, rc->width, rc->height, 0, 0, 0);
-				//al_draw_bitmap(map1Layer1->getLayerBitmap(), 0, 0, 0);
 
 				/* 플레이어 및 게임 오브젝트 출력 */
 				player->draw();
@@ -733,11 +788,21 @@ int main(int argc, char *argv[])
 	delete npc1;
 	delete player;
 
-	delete layer1;
-	delete tilesetMap1;
+	delete map00_2;
+	delete map00_1;
+	delete map00;
+
+	delete map00_2_layer1;
+	delete map00_2_layer0;
+	delete map00_1_layer1;
+	delete map00_1_layer0;
+	delete map00_layer0;
+
+	// delete layer1;
+	// delete tilesetMap1;
 
 	delete sprBG1;
-	cleanUp();
+	cleanup();
 
 	return 0;
 }

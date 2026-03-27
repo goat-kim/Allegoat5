@@ -199,15 +199,62 @@ void GameObject::setState(int s) {
 	state = (State)s;
 }
 
+float GameObject::getWidth() const {
+	return (float)sprAni->getUnitWidth() * ptSpr->getScaleX();
+}
+
+float GameObject::getHeight() const {
+	return (float)sprAni->getUnitHeight() * ptSpr->getScaleY();
+}
+
 void GameObject::updateBoundaryBox() {
-	float uw = (float)sprAni->getUnitWidth() * ptSpr->getScaleX();
-	float uh = (float)sprAni->getUnitHeight() * ptSpr->getScaleY();
+	// float uw = (float)sprAni->getUnitWidth() * ptSpr->getScaleX();
+	// float uh = (float)sprAni->getUnitHeight() * ptSpr->getScaleY();
+	float uw = getWidth();
+	float uh = getHeight();
 	float cx = ptSpr->getCenterX();
 	float cy = ptSpr->getCenterY();
 	bndBox.x = ptSpr->getX() - (int)(cx * uw);
 	bndBox.y = ptSpr->getY() - (int)(cy * uh);
 	bndBox.width = (int)(sprAni->getUnitWidth() * ptSpr->getScaleX());
 	bndBox.height = (int)(sprAni->getUnitHeight() * ptSpr->getScaleY());
+}
+
+void GameObject::updateBackend(const Rect& rc) {
+	float bndBoxPrevX = bndBox.x;
+	float bndBoxPrevY = bndBox.y;
+	float dx, dy;
+
+	/* collision detection and handling */
+	if (aabbIntersection(rc)) {
+		if (dir == DIRECT_LEFT || dir == DIRECT_RIGHT) {
+			if (bndBox.x + bndBox.width > rc.x) { // 우측으로 이동하여 물체와 충돌
+				bndBox.x = rc.x - bndBox.width;
+				dx = bndBox.x - bndBoxPrevX;
+				vx = 0;
+			}
+			else if (rc.x + rc.width > bndBox.x) { // 좌측으로 이동하여 물체와 충돌
+				bndBox.x = rc.x + rc.width;
+				dx = bndBox.x - bndBoxPrevX;
+				vx = 0;
+			}
+			x += dx;
+		}
+
+		else if (dir == DIRECT_UP || dir == DIRECT_DOWN) {
+			if (bndBox.y + bndBox.height > rc.y) { // 하단으로 이동하여 물체와 충돌
+				bndBox.y = rc.y - bndBox.height;
+				dy = bndBox.y - bndBoxPrevY;
+				vy = 0;
+			}
+			else if (rc.y + rc.height < bndBox.y) { // 상단으로 이동하여 물체와 충돌
+				bndBox.y = rc.y + rc.height;
+				dy = bndBox.y - bndBoxPrevY;
+				vy = 0;
+			}
+			y += dy;
+		}
+	}
 }
 
 const Rect& GameObject::getBoundaryBox() const {
