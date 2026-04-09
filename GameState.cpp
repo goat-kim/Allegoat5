@@ -2,6 +2,7 @@
 #include "GameState.h"
 #include "Scroller.h"
 #include "Player.h"
+#include "Map.h"
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
@@ -18,7 +19,7 @@ GameState::GameState()
 	scroller(nullptr),
 	ptPlayer(nullptr),
 	colEnable(true),
-	mapWidth(TARGET_BITMAP_WIDTH), mapHeight(TARGET_BITMAP_HEIGHT),
+	mapWidth(DEFAULT_MAP_WIDTH), mapHeight(DEFAULT_MAP_HEIGHT),
 	curGameState(GAME_STATE_INIT)
 {
 #ifdef DEBUG
@@ -195,18 +196,6 @@ bool GameState::init(int w, int h) {
 	return true;
 }
 
-void GameState::initMap() {
-	initMap(mapWidth, mapHeight);
-}
-
-void GameState::initMap(int w, int h) {
-	mapWidth = w;
-	mapHeight = h;
-	if (!scroller)
-		scroller = new Scroller();
-	scroller->init(); // 현재 맵 사이즈를 기준으로 scroller 객체 초기화
-}
-
 void GameState::update() {
 	// update routine
 	al_get_keyboard_state(&keyState);
@@ -221,15 +210,28 @@ void GameState::setCurrentGameState(int state) {
 	curGameState = state;
 }
 
-void setCurrentMap(Map *curmap) {
+void GameState::setCurrentMap(Map *curmap) {
 	ptMap = curmap;
 	if (!scroller)
-		scroller = new Scroller();
-	scroller->
+		scroller = new Scroller(); 
+	// 현재 맵의 사이즈를 기준으로 스크롤러 업데이트
+	// TODO: 위 조건식을 제거하고 Scroller::init을 ::update로 변경할 것..
+	mapWidth = curmap->getMapWidthPx();
+	mapHeight = curmap->getMapHeightPx();
+	Rect bgBound(0.0f, 0.0f, mapWidth, mapHeight);
+	scroller->init(bgBound);
 }
 
-Map *getCurrentMap() const {
+Map *GameState::getCurrentMap() const {
 	return ptMap;
+}
+
+int GameState::getMapWidth() const {
+	return mapWidth;
+}
+
+int GameState::getMapHeight() const {
+	return mapHeight;
 }
 
 ALLEGRO_EVENT_QUEUE* GameState::getEventQueue() const {
@@ -343,18 +345,18 @@ bool GameState::setDisplaySize(int w, int h) {
 	return al_resize_display(display, w, h);
 }
 
-int GameState::getMapWidth() const {
-	return mapWidth;
-}
+// int GameState::getMapWidth() const {
+// 	return mapWidth;
+// }
 
-int GameState::getMapHeight() const {
-	return mapHeight;
-}
+// int GameState::getMapHeight() const {
+// 	return mapHeight;
+// }
 
-void GameState::setMapSize(int w, int h) {
-	mapWidth = w;
-	mapHeight = h;
-}
+// void GameState::setMapSize(int w, int h) {
+// 	mapWidth = w;
+// 	mapHeight = h;
+// }
 
 void GameState::setGameTitle(const char* t) {
 	strcpy(gameTitle, t);

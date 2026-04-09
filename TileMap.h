@@ -25,14 +25,14 @@ private:
 public:
 	Tileset(int tw = DEFAULT_TILE_WIDTH, int th = DEFAULT_TILE_HEIGHT);
 	~Tileset();
-	bool load(const char* filename);
+	bool load(const char *filename);
 	int getTileWidth() const;
 	int getTileHeight() const;
 	int getTilesetWidth() const;
 	int getTilesetHeight() const;
 	int getTilesetSpriteWidth() const;
 	int getTilesetSpriteHeight() const;
-	Sprite* getSprite() const;
+	Sprite *getSprite() const;
 	Rect toRect(int tidx) const; // 최적화: 참조를 반환하는 방법으로 대체할 수 없는지 테스트해볼 것
 };
 
@@ -40,48 +40,51 @@ public:
 class TileMapLayer {
 private:
 	int mapWidth, mapHeight;		// 맵의 가로/세로 타일 개수
-	ALLEGRO_BITMAP* layerBitmap;
+	ALLEGRO_BITMAP *layerBitmap;
 	std::vector<Tile> map;
-	Tileset* ptTileset;				// Tileset object's pointer
-	//char* filename;
+	Tileset *ptTileset;				// Tileset object's pointer
 
 private:
-	int tok(char** buf); // null: -1, LF: -2, otherwise: tileID
+	int tok(char **buf); // null: -1, LF: -2, otherwise: tileID
 public:
-	//TileMapLayer();
-	TileMapLayer(Tileset* tsPtr);
+	TileMapLayer(Tileset *tsPtr);
 	~TileMapLayer();
-	bool load(const char* filename);
-	//bool loadMapSprite(const char* filename);
-	void setTileset(Tileset* tsPtr);
-	void draw();
+	
+	bool load(const char *filename);
+	void setTileset(Tileset *tsPtr);
+	void draw(); // 처음 또는 업데이트 시에만 호출됨
+	ALLEGRO_BITMAP *getLayerBitmap() const;
+
 	int getTileId(int idx);
 	int getTileId(int x, int y);
 	int getTileType(int idx);
 	int getTileType(int x, int y);
+	int getTileWidth() const;
+	int getTileHeight() const;
 
 	int getMapWidth() const;
 	int getMapHeight() const;
-	int getTileWidth() const;
-	int getTileHeight() const;
 	int getMapWidthPx() const;
 	int getMapHeightPx() const;
-	ALLEGRO_BITMAP* getLayerBitmap() const;
-	
-	//const Tile& getTile(int idx);
-	//const Tile& getTile(int x, int y);
 };
 
 class TileMap: public Map {
 private:
 	int tileWidth, tileHeight;
 	std::vector<TileMapLayer*> layers;
+	ALLEGRO_BITMAP *mapBitmap;
 public:
-	TileMap(int mapid, int tw = DEFAULT_TILE_WIDTH, int th = DEFAULT_TILE_HEIGHT);
+	TileMap(int mapid);
+	TileMap(int mapid, const char *mapname);
 	~TileMap();
-	void draw();
-	void append(TileMapLayer* layer);
+	virtual void draw(); // 처음 또는 업데이트 시에만 호출됨
+	ALLEGRO_BITMAP *getMapBitmap() const;
+	void append(TileMapLayer *layer);
 	int getLayerCount() const;
-	int getMapWidthPx() const;
-	int getMapHeightPx() const;
+	virtual int getMapWidth() const;
+	virtual int getMapHeight() const;
+	virtual int getMapWidthPx() const;
+	virtual int getMapHeightPx() const;
+	int getTileWidth() const;
+	int getTileHeight() const;
 };

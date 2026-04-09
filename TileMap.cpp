@@ -82,7 +82,6 @@ TileMapLayer::TileMapLayer(Tileset* tsPtr)
 #ifdef DEBUG
 	printf("TileMapLayer(Tileset*)\n");
 #endif
-	map.clear();
 }
 
 TileMapLayer::~TileMapLayer() {
@@ -222,8 +221,6 @@ void TileMapLayer::setTileset(Tileset* tsPtr) {
 }
 
 void TileMapLayer::draw() {
-
-
 	ALLEGRO_BITMAP* targetOrigin = al_get_target_bitmap();
 	al_set_target_bitmap(layerBitmap);
 
@@ -296,12 +293,10 @@ int TileMapLayer::getMapHeight() const {
 }
 
 int TileMapLayer::getTileWidth() const {
-	//return ptTileset->tileWidth;
 	return ptTileset->getTileWidth();
 }
 
 int TileMapLayer::getTileHeight() const {
-	//return tileHeight;
 	return ptTileset->getTileHeight();
 }
 
@@ -310,16 +305,22 @@ int TileMapLayer::getMapWidthPx() const {
 }
 
 int TileMapLayer::getMapHeightPx() const {
-	//return mapHeight * tileHeight;
 	return mapHeight * ptTileset->getTileHeight();
 }
 
-TileMap::TileMap(int mapid, int tw, int th) 
-	: Map(mapid), tileWidth(tw), tileHeight(th) {
+TileMap::TileMap(int mapid) 
+	: TileMap(mapid, "") {
 #ifdef DEBUG
 	printf("TileMap::TileMap(id=%d)\n", id);
 #endif
-	layers.clear();
+	//layers.clear();
+}
+
+TileMap::TileMap(int mapid, const char *mapname)
+	: Map(mapid, mapname), mapBitmap() {
+#ifdef DEBUG
+	printf("TileMap::TileMap(id=%d, name=%s)\n", id, name);
+#endif
 }
 
 TileMap::~TileMap() {
@@ -331,6 +332,8 @@ TileMap::~TileMap() {
 		delete lp;
 		layers.pop_back();
 	}
+	if (mapBitmap)
+		al_destroy_bitmap(mapBitmap);
 }
 
 void TileMap::draw() {
@@ -339,9 +342,20 @@ void TileMap::draw() {
 	// (3). (2)보다 우선순위가 높은(즉, 위로 올라가야 하는) 높은 타일들을 다시 target bitmap에 그린다.
 	// (3)의 기능은 draw대신 다른 멤버 함수로 분리할 것
 
+	// 한 맵에 포함된 모든 레이어들의 비트맵을 target bitmap인 mapBitmap에 draw하여 하나의 완성된 이미지(비트맵)를 만드는 방식
 	// 반복 시 foreach나 iterator를 사용할 것
-	for (int i = 0; i < layers.size(); i++)
-		layers[i]->draw();
+	ALLEGRO_BITMAP* targetOrigin = al_get_target_bitmap();
+	al_set_target_bitmap(mapBitmap);
+	al_clear_to_color(al_map_rgb(0, 0, 0));
+	for (int i = 0; i < layers.size(); i++) {
+		ALLEGRO_BITMAP *layerBitmap = layers[i]->getLayerBitmap();
+		al_draw_bitmap(layerBitmap, 0, 0, 0);
+	}
+	al_set_target_bitmap(targetOrigin);
+}
+
+ALLEGRO_BITMAP *TileMap::getMapBitmap() const {
+	return mapBitmap;
 }
 
 void TileMap::append(TileMapLayer *layer) {
@@ -350,6 +364,18 @@ void TileMap::append(TileMapLayer *layer) {
 
 int TileMap::getLayerCount() const {
 	return layers.size();
+}
+
+int TileMap::getMapWidth() const {
+	if (layers.empty())
+		return -1;
+	return layers[0]->getMapWidth();
+}
+
+int TileMap::getMapHeight() const {
+	if (layers.empty())
+		return -1;
+	return layers[0]->getMapHeight();
 }
 
 int TileMap::getMapWidthPx() const {
@@ -362,4 +388,16 @@ int TileMap::getMapHeightPx() const {
 	if (layers.empty())
 		return -1;
 	return layers[0]->getMapHeightPx();
+}
+
+int TileMap::getTileWidth() const {
+	if (layers.empty())
+		return -1;
+	return layers[0]->getTileWidth();
+}
+
+int TileMap::getTileHeight() const {
+	if (layers.empty())
+		return -1;
+	return layers[0]->getTileHeight();
 }

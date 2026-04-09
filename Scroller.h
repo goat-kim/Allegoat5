@@ -15,8 +15,6 @@ private:
 public:
 	Scroller();
 	~Scroller();
-	//bool init(const Rect& bgBound, Player* pt);
-	bool init();
 	bool init(const Rect& bgBound);
 	void update();
 	void setPlayer(Player* pt);

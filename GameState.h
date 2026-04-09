@@ -4,6 +4,8 @@
 
 class Map;
 
+#define DEFAULT_MAP_WIDTH  DEFAULT_DISPLAY_WIDTH
+#define DEFAULT_MAP_HEIGHT DEFAULT_DISPLAY_HEIGHT
 //static const char* GAME_TITLE = "Goat Simulator";
 
 static const char* GAME_STATE_SYSTEM_FONT_PATH_SANS = "font/Dotum-03.ttf";
@@ -64,10 +66,11 @@ private:
 	ALLEGRO_KEYBOARD_STATE keyState;
 	ALLEGRO_KEYBOARD_STATE prevKeyState;
 
-	Scroller* scroller;
-	Player* ptPlayer;			// 현재 컨트롤 중인 플레이어 객체
-	Map *ptMap;					// current map
-	// int mapWidth, mapHeight;	// 현재 맵의 크기
+	Scroller *scroller;	// global scroller object
+	Player *ptPlayer;	// pointer of current playable (controllable) object
+	Map *ptMap;			// pointer of current map object
+
+	int mapWidth, mapHeight; // current map size in pixel
 
 	bool colEnable;
 
@@ -86,9 +89,7 @@ public:
 	static void destroyInstance();
 
 	bool init();
-	bool init(int w, int h);	// initialize with display width and height
-	// void initMap();
-	// void initMap(int w, int h);
+	bool init(int displayWidth, int displayHeight);
 	void update();
 
 	int getCurrentGameState() const;
@@ -130,7 +131,6 @@ public:
 
 	int getMapWidth() const;
 	int getMapHeight() const;
-	void setMapSize(int w, int h);
 	
 	void setGameTitle(const char* t);
 	void setDisplayFlag(int f);

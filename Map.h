@@ -2,29 +2,36 @@
 #include "Sound.h"
 #include <vector>
 #include <string>
-using std::string;
 
 class Map {
 private:
 	int id;
+	std::string name;
 
 	Sound *bgm;
 	Sound *bgs;
 	bool bgmLoop;
 	bool bgsLoop;
 
-	// TODO: 그외 전환 효과
+	// TODO: 그외 전환 효과 추가
 
 public:
 	Map(int mapid);
+	Map(int mapid, const char *mapname);
 	~Map();
 	bool init();
-	bool loadBGM(const char* pathname);
-	bool loadBGS(const char* pathname);
+	bool loadBGM(const char *pathname);
+	bool loadBGS(const char *pathname);
 	int getId() const;
+	virtual int getMapWidth() const = 0;
+	virtual int getMapHeight() const = 0;
+	virtual int getMapWidthPx() const = 0;
+	virtual int getMapHeightPx() const = 0;
+	virtual void draw() = 0;
 	// Map *load
 };
 
+// TODO: 맵의 메모리 할당 및 해제를 관리하는 메커니즘의 필요
 /*
 // MapStatList entry
 class MapStat {

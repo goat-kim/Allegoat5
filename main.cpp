@@ -21,6 +21,8 @@
 
 #define N_NPCS 50
 
+#define DEBUG
+
 bool allegroInit() {
 #ifdef DEBUG
 	printf("allegroInit()\n");
@@ -107,13 +109,55 @@ int main(int argc, char *argv[])
 	char vpLog[256];	// current view port
 	char vxyLog[256];	// current vx, vy
 
-	al_reserve_samples(10);
-	//Sound *sound1 = new Sound();
-	//sound1->load("bgm/Town2.ogg");
+	// al_reserve_samples(10);
+	// Sound *sound1 = new Sound();
+	// sound1->load("bgm/Town2.ogg");
 
 	Sprite *sprSplashScreen = new Sprite();
 	sprSplashScreen->load(splashFilename);
 
+	// Map initialize =========================================================
+	// Initialize tile sets (shared objects)
+	Tileset* tsInterior = new Tileset();
+	tsInterior->load("img/Interior.png");
+
+	// Initialize tile map layers
+	// map00:
+	// - layer0 -> tsInterior
+	TileMapLayer *map00_layer0 = new TileMapLayer(tsInterior);
+	map00_layer0->load("map/map00.csv");
+
+	// map00_1:
+	// - layer0 -> tsInterior
+	// - layer1 -> tsInterior
+	TileMapLayer *map00_1_layer0 = new TileMapLayer(tsInterior);
+	TileMapLayer *map00_1_layer1 = new TileMapLayer(tsInterior);
+	map00_1_layer0->load("map/map00-1_l0.csv");
+	map00_1_layer1->load("map/map00-1_l1.csv");
+	
+	// map00_2
+	// - layer0 -> tsInterior
+	// - layer1 -> tsInterior
+	TileMapLayer *map00_2_layer0 = new TileMapLayer(tsInterior);
+	TileMapLayer *map00_2_layer1 = new TileMapLayer(tsInterior);
+	map00_2_layer0->load("map/map00-2_l0.csv");
+	map00_2_layer1->load("map/map00-2_l1.csv");
+
+	// Initialize tile maps
+	// default tile width=16, tile height=16
+	TileMap *map00 = new TileMap(0);
+	map00->append(map00_layer0);
+
+	TileMap *map00_1 = new TileMap(1);
+	map00_1->append(map00_1_layer0);
+	map00_1->append(map00_1_layer1);
+	
+	TileMap *map00_2 = new TileMap(2);
+	map00_2->append(map00_2_layer0);
+	map00_2->append(map00_2_layer1);
+	// ========================================================================
+
+	// Player and GameObjects initialize ======================================
 	Sprite *sprBG1 = new Sprite();
 	float bgScale = 1.0f;
 	sprBG1->load(bgFilename);
@@ -126,15 +170,11 @@ int main(int argc, char *argv[])
 	}
 	
 	player->setScrollMode(true);
-	//player->setScale(5.0f);
 	player->setColorKey(0x20, 0x9c, 0x00);
 	player->setAnimationSpeed(ANIM_NORMAL);
 	player->setXY(200, 130);
 	player->setDirect(DIRECT_RIGHT);
 	player->setSpeed(2.0f);
-	//player->setBoundaryBoxVisible(true);
-	//player->setScrollMode(false);
-	//player->setXY(gameState->getDisplayWidth() / 2, gameState->getDisplayHeight() / 2);
 
 	Npc1 *npc1 = new Npc1();
 	if (!npc1->init("img/Actor2.png")) {
@@ -186,67 +226,22 @@ int main(int argc, char *argv[])
 				break;
 		}
 	}
+	// ========================================================================
 
+	// GameState update =======================================================
 	gameState->setCurrentPlayer(player);
+	gameState->setCurrentMap(map00);
 	// 배경 사진(sprBG1)의 크기를 기준으로 맵 크기 설정
 	//gameState->setMapSize(sprBG1->getWidth(), sprBG1->getHeight());
 	//gameState->initMap();
 	//
-
-	// Initialize tile sets
-	Tileset* tsInterior = new Tileset();
-	tsInterior->load("img/Interior.png");
-
-	// Initialize tile map layers
-	TileMapLayer *map00_layer0 = new TileMapLayer(tsInterior);
-	map00_layer0->load("map/map00.csv");
-
-	TileMapLayer *map00_1_layer0 = new TileMapLayer(tsInterior);
-	TileMapLayer *map00_1_layer1 = new TileMapLayer(tsInterior);
-	map00_1_layer0->load("map/map00-1_l0.csv");
-	map00_1_layer1->load("map/map00-1_l1.csv");
-	
-	TileMapLayer *map00_2_layer0 = new TileMapLayer(tsInterior);
-	TileMapLayer *map00_2_layer1 = new TileMapLayer(tsInterior);
-	map00_2_layer0->load("map/map00-2_l0.csv");
-	map00_2_layer1->load("map/map00-2_l1.csv");
-
-	// Initialize tile maps
-	// default tile width=16, tile height=16
-	TileMap *map00 = new TileMap(0);
-	TileMap *map00_1 = new TileMap(1);
-	TileMap *map00_2 = new TileMap(2);
-
-	map00->append(map00_layer0);
-	map00_1->append(map00_1_layer0);
-	map00_1->append(map00_1_layer1);
-	map00_2->append(map00_2_layer0);
-	map00_2->append(map00_2_layer1);
-
-	//TileMapLayer* layer1 = new TileMapLayer(tilesetMap1);
-	//layer1->setTileset(tilesetMap1);
-	//layer1->load("map/kemo.csv");
+	// ========================================================================
 
 	// Map render
-	map00->draw();
-	map00_1->draw();
-	map00_2->draw();
-
-	//layer1->draw();
-
-	// 현재 타일맵의 픽셀 사이즈를 기준으로 맵 픽셀 사이즈 설정
-	TileMap *ptCurrentMap = map00;
-	int curMapWidthPx = ptCurrentMap->getMapWidthPx();
-	int curMapHeightPx = ptCurrentMap->getMapHeightPx();
-	if (curMapWidthPx == -1 || curMapHeightPx == -1) {
-		fprintf(stderr, "E: current tile map is not initialized\n");
-		return -1;
-	}
-	gameState->setMapSize(curMapWidthPx, curMapHeightPx);
-#ifdef DEBUG
-	printf("map size: [%d, %d]\n", gameState->getMapWidth(), gameState->getMapHeight());
-#endif
-	gameState->initMap();
+	gameState->getCurrentMap()->draw();
+	// map00->draw();
+	// map00_1->draw();
+	// map00_2->draw();
 
 	gameState->startTimer();
 #ifdef DEBUG
@@ -256,7 +251,7 @@ int main(int argc, char *argv[])
 #endif
 	//sound1->play(true);
 
-	Scroller* ptScroll = gameState->getScroller();
+	Scroller *ptScroll = gameState->getScroller();
 #ifdef DEBUG
 	printf("scroller fixed: %d %d\n", ptScroll->isFixX(), ptScroll->isFixY());
 #endif
@@ -647,8 +642,11 @@ int main(int argc, char *argv[])
 				//sprBG1->draw(scroll->getViewPort());
 
 				/* 레이어 별 맵 출력 */
-				const Rect* rc = gameState->getScroller()->getScaledViewPort(bgScale);
-				al_draw_bitmap_region(layer1->getLayerBitmap(), rc->x, rc->y, rc->width, rc->height, 0, 0, 0);
+				// (이전에) draw된 맵의 비트맵에서 계산된 뷰포트만큼을 화면에 뿌린다
+				const Rect *mapVp = gameState->getScroller()->getScaledViewPort(bgScale);
+				TileMap *curMap = (TileMap*)gameState->getCurrentMap();
+				ALLEGRO_BITMAP *mapBitmap = curMap->getMapBitmap();
+				al_draw_bitmap_region(mapBitmap, mapVp->x, mapVp->y, mapVp->width, mapVp->height, 0, 0, 0);
 
 				/* 플레이어 및 게임 오브젝트 출력 */
 				player->draw();

@@ -24,18 +24,11 @@ Scroller::~Scroller() {
 #endif
 }
 
-//bool Scroller::init(const Rect& bgBound, Player* pt) {
-// 현재 맵 크기를 기준으로 스크롤러의 배경 크기 적용
-bool Scroller::init() {
-	GameState* gs = GameState::getInstance();
-	Rect rcBG(0.0f, 0.0f, gs->getMapWidth(), gs->getMapHeight());
-	return init(rcBG);
-}
-
 bool Scroller::init(const Rect& bgBound) {
 	GameState* gs = GameState::getInstance();
 
 	bgBnd = bgBound;
+	// TODO: player가 null일 때 처리 추가
 	ptPlayer = gs->getCurrentPlayer();
 	float px = ptPlayer->getX();
 	float py = ptPlayer->getY();
